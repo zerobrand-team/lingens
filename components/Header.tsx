@@ -7,7 +7,7 @@ const CreditControls = () => {
   
   return (
     <div className="flex items-center gap-3">
-        {/* Кнопка Get more (незаметная) */}
+        {/* Кнопка Get more */}
         <button
           onClick={openFeedbackModal}
           className="text-[11px] font-medium text-gray-400 border border-gray-300 rounded-full px-3 py-1 hover:border-black hover:text-black transition-colors">
@@ -25,10 +25,10 @@ const CreditControls = () => {
   );
 };
 
-// --- ИНТЕРФЕЙС (ДОБАВИЛИ onLogoClick) ---
+// --- ИНТЕРФЕЙС ---
 interface HeaderProps {
     generatedPost: string;
-    onLogoClick: () => void; // <--- ВАЖНО: Функция возврата на лендинг
+    onLogoClick: () => void;
 }
 
 // --- Компонент: Mobile Header ---
@@ -44,7 +44,7 @@ export const MobileHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClick
             <CreditControls />
         </div>
 
-        {/* Шаги (Step 1 / Step 2) - показываем только если поста еще нет */}
+        {/* Шаги (Step 1 / Step 2) */}
         {!generatedPost && (
           <div className="w-full flex justify-center mt-6 pb-6 z-20 animate-in fade-in slide-in-from-top-2 duration-500 delay-100">
             <div className="flex items-start gap-3 select-none">
@@ -63,20 +63,20 @@ export const MobileHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClick
   );
 };
 
-// --- Компонент: Desktop Header ---
+// --- Desktop Header ---
 export const DesktopHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClick }) => {
   return (
     <div className="w-full border-b border-black/[0.08] justify-center py-4 z-20 sticky top-0 flex bg-white/80 backdrop-blur-md transition-all relative">
         
-        {/* Логотип (ДОБАВИЛИ КЛИК) */}
+        {/* Логотип */}
         <div 
-            className="absolute left-6 top-1/2 -translate-y-1/2 cursor-pointer hover:opacity-70 transition-opacity"
+            className="absolute left-6 top-1/2 -translate-y-1/2 cursor-pointer transition-opacity"
             onClick={onLogoClick}
         >
             <img src="/Lingens.svg" alt="Lingens" className="h-6 w-auto" />
         </div>
 
-        {/* Шаги (Рендерим ТОЛЬКО если пост еще не сгенерирован) */}
+        {/* Шаги */}
         {!generatedPost && (
             <div className="flex items-start gap-4 select-none animate-in fade-in zoom-in duration-300">
                 <div className="flex flex-col items-center gap-2">
@@ -90,7 +90,7 @@ export const DesktopHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClic
             </div>
         )}
 
-        {/* Кредиты (Остаются справа) */}
+        {/* Кредиты */}
         <div className="absolute right-6 top-1/2 -translate-y-1/2">
             <CreditControls />
         </div>
