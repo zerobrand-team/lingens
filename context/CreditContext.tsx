@@ -24,7 +24,7 @@ const CreditContext = createContext<CreditContextType | undefined>(undefined);
 export const CreditProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [credits, setCredits] = useState<number>(() => {
     const saved = localStorage.getItem('user_credits');
-    return saved !== null ? parseInt(saved, 10) : 5;
+    return saved !== null ? parseInt(saved, 10) : 30;
   });
 
   // --- НОВОЕ СОСТОЯНИЕ ---
