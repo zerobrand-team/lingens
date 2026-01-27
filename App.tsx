@@ -1,8 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import LandingPage from './LandingPage';
-// Убедись, что в файле Header.tsx ты обновила интерфейс, как мы обсуждали ранее!
 import { MobileHeader, DesktopHeader } from './components/Header';
-import { generateLinkedInPost, regeneratePostText, regenerateVisualField, DEFAULT_SYSTEM_INSTRUCTION, PostLength } from './services/geminiService';
+import { generateLinkedInPost, regeneratePostText, regenerateVisualField, PostLength } from './services/geminiService';
 import { TemplateStyle, VisualState, HistoryItem } from './types';
 import HowItWorks from './components/HowItWorks';
 import VisualCard from './components/VisualCard';
@@ -44,9 +43,9 @@ const DEFAULT_VISUAL_STATE: VisualState = {
 
 const App: React.FC = () => {
   // --- STATE ---
-  const [showLanding, setShowLanding] = useState(true); // Показываем лендинг по умолчанию
+  const [showLanding, setShowLanding] = useState(true); 
   const [rawInput, setRawInput] = useState<string>('');
-  const [systemInstruction, setSystemInstruction] = useState<string>(DEFAULT_SYSTEM_INSTRUCTION);
+  const [systemInstruction, setSystemInstruction] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [isRegeneratingText, setIsRegeneratingText] = useState<boolean>(false);
   const [regeneratingFields, setRegeneratingFields] = useState({headline: false, subHeadline: false});
@@ -142,7 +141,7 @@ const App: React.FC = () => {
     }
     setIsGenerating(true);
     try {
-      const content = await generateLinkedInPost(rawInput, selectedLength, systemInstruction);
+      const content = await generateLinkedInPost(rawInput, selectedLength);
       setGeneratedPost(content.postText);
       const newVisuals = {
         ...visualData,
