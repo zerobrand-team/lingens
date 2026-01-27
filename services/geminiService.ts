@@ -1,6 +1,6 @@
-import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
+import { GoogleGenAI, Type } from "@google/genai";
 
-// Типы ответа (для чистоты)
+// Типы
 export interface GeneratedContent {
   postText: string;
   headline: string;
@@ -28,7 +28,6 @@ This should feel like I’m speaking, just clearer and more readable.
 - Do NOT generalize or abstract unless necessary.
 - Think: “How would I say this if I had 10 more minutes to explain it clearly?”`;
 
-// --- СПИСОК СЛУЧАЙНЫХ УГЛОВ ---
 const REGENERATE_ANGLES = [
   "Focus heavily on the emotion and personal struggle.",
   "Make it punchy, direct, and slightly contrarian.",
@@ -106,10 +105,11 @@ const Prompts = {
   },
 
   regenerateVisuals: (rawInput: string, angle: string) =>
-    `Generate a catchy headline and subheadline for a visual card.
+    `Generate a catchy headline and subheadline for a visual card based on these notes.
     Style: ${angle}.
     Headline: Short & Punchy (max 7 words).
     Sub-headline: Supporting context.
+    
     Notes: ${rawInput}`,
 
   regenerateHeadlineOnly: (rawInput: string, angle: string) =>
@@ -126,20 +126,19 @@ const Prompts = {
     Context: ${rawInput}`,
 };
 
-// --- ИНИЦИАЛИЗАЦИЯ ---
+// ИНИЦИАЛИЗАЦИЯ (Используем import.meta.env для Vite)
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
-// Обрати внимание: имя переменной должно совпадать с тем, что в Vercel (VITE_...)
+let ai: GoogleGenAI | null = null;
 
-let genAI: GoogleGenerativeAI | null = null;
 if (apiKey) {
-    genAI = new GoogleGenerativeAI(apiKey);
+    ai = new GoogleGenAI({ apiKey: apiKey });
 } else {
     console.warn("API Key is missing!");
 }
 
-const MODEL_NAME = "gemini-1.5-flash"; // Flash стабильнее и быстрее для Vercel
+const MODEL_NAME = "gemini-2.0-flash-exp"; 
 
-// --- ЧИСТКА JSON ---
+// ХЕЛПЕР ДЛЯ ЧИСТКИ JSON
 const parseCleanJSON = (text: string) => {
     try {
         let cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
@@ -149,85 +148,103 @@ const parseCleanJSON = (text: string) => {
         cleanText = cleanText.substring(firstBrace, lastBrace + 1);
         return JSON.parse(cleanText);
     } catch (e) {
-        console.error("JSON Parse Error:", text);
+        console.error("JSON Parse Error. Raw text:", text);
         throw e;
     }
 };
 
-// --- ОСНОВНАЯ ФУНКЦИЯ ---
-export const generateLinkedInPost = async (rawInput: string, length: PostLength = 'Thoughtful', customInstruction?: string): Promise<GeneratedContent> => {
-  if (!genAI) return { postText: "System Error: API Key missing", headline: "Error", subHeadline: "No API Key" };
-  
-  try {
-    const model = genAI.getGenerativeModel({ 
-        model: MODEL_NAME,
-        systemInstruction: customInstruction || DEFAULT_SYSTEM_INSTRUCTION,
-        generationConfig: {
-            responseMimeType: "application/json",
-            // Схема ответа для 100% валидного JSON
-            responseSchema: {
-                type: SchemaType.OBJECT,
-                properties: {
-                    postText: { type: SchemaType.STRING },
-                    headline: { type: SchemaType.STRING },
-                    subHeadline: { type: SchemaType.STRING },
-                },
-                required: ["postText", "headline", "subHeadline"],
-            }
-        }
-    });
+// ФУНКЦИИ ГЕНЕРАЦИИ
 
-    const result = await model.generateContent(Prompts.generatePost(rawInput, length));
-    const response = result.response;
-    const text = response.text();
+export const generateLinkedInPost = async (rawInput: string, length: PostLength = 'Thoughtful', customInstruction?: string): Promise<GeneratedContent> => {
+  if (!ai) return { postText: "System Error: API Key missing", headline: "Error", subHeadline: "No API Key" };
+  try {
+    const response = await ai.models.generateContent({
+      model: MODEL_NAME,
+      contents: Prompts.generatePost(rawInput, length), 
+      config: {
+        systemInstruction: customInstruction || DEFAULT_SYSTEM_INSTRUCTION,
+        temperature: 0.7,
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            postText: { type: Type.STRING },
+            headline: { type: Type.STRING },
+            subHeadline: { type: Type.STRING },
+          },
+          required: ["postText", "headline", "subHeadline"],
+        },
+      },
+    });
     
+    const text = response.text || "";
     return parseCleanJSON(text) as GeneratedContent;
 
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return { postText: "Error generating post. Try again.", headline: "Error", subHeadline: "Error" };
+    return { postText: "Error generating post", headline: "Error", subHeadline: "Try again" };
   }
 };
 
-// --- РЕГЕНЕРАЦИЯ ТЕКСТА ---
 export const regeneratePostText = async (rawInput: string, currentPost: string, length: PostLength, customInstruction?: string): Promise<string> => {
-  if (!genAI) return currentPost;
+  if (!ai) return currentPost;
+
   const randomAngle = REGENERATE_ANGLES[Math.floor(Math.random() * REGENERATE_ANGLES.length)];
 
   try {
-    const model = genAI.getGenerativeModel({ 
-        model: MODEL_NAME,
+    const response = await ai.models.generateContent({
+      model: MODEL_NAME,
+      contents: Prompts.regenerateText(rawInput, length, randomAngle), 
+      config: {
         systemInstruction: customInstruction || DEFAULT_SYSTEM_INSTRUCTION,
-        generationConfig: { responseMimeType: "application/json" } 
+        temperature: 1.2,
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: { postText: { type: Type.STRING } },
+          required: ["postText"],
+        },
+      },
     });
 
-    const result = await model.generateContent(Prompts.regenerateText(rawInput, length, randomAngle));
-    const json = parseCleanJSON(result.response.text());
+    const text = response.text || "";
+    const json = parseCleanJSON(text);
     return json.postText;
   } catch (error) {
+    console.error("Regenerate Text Error:", error);
     return currentPost;
   }
 };
 
-// --- РЕГЕНЕРАЦИЯ ЗАГОЛОВКОВ ---
 export const regenerateVisualField = async (rawInput: string, field: 'headline' | 'subHeadline'): Promise<string> => {
-  if (!genAI) return "Error";
+  if (!ai) return "Error";
+
   const randomVisualAngle = VISUAL_ANGLES[Math.floor(Math.random() * VISUAL_ANGLES.length)];
 
   try {
     const prompt = field === 'headline' 
         ? Prompts.regenerateHeadlineOnly(rawInput, randomVisualAngle)
-        : Prompts.regenerateSubHeadlineOnly(rawInput, randomVisualAngle); // ИСПРАВЛЕНО: добавлен аргумент angle
+        : Prompts.regenerateSubHeadlineOnly(rawInput, randomVisualAngle); // ИСПРАВЛЕНО: добавил аргумент
         
-    const model = genAI.getGenerativeModel({ 
-        model: MODEL_NAME,
-        generationConfig: { responseMimeType: "application/json" }
+    const response = await ai.models.generateContent({
+      model: MODEL_NAME,
+      contents: prompt,
+      config: {
+        temperature: 1.1, 
+        responseMimeType: "application/json",
+        responseSchema: {
+            type: Type.OBJECT,
+            properties: { text: { type: Type.STRING } },
+            required: ["text"],
+        },
+      },
     });
-
-    const result = await model.generateContent(prompt);
-    const json = parseCleanJSON(result.response.text());
+    
+    const text = response.text || "";
+    const json = parseCleanJSON(text);
     return json.text;
   } catch (error) {
+    console.error(`Regenerate ${field} Error:`, error);
     return "Try again";
   }
 };
