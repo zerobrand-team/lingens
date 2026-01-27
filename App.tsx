@@ -13,7 +13,6 @@ import { useCredits } from './context/CreditContext';
 import { GenerateButton } from './components/GenerateButton'; 
 import { FeedbackModal } from './components/modals/FeedbackModal';
 
-// --- Картинки (внешние ссылки) ---
 const tplMinimal = "/templates/minimal.png";
 const tplBottom = "/templates/bottom.png";
 const tplTop = "/templates/top.png";
