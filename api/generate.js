@@ -66,7 +66,7 @@ export default async function handler(request, response) {
     }
 
     const model = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-flash-001",
+        model: "ggemini-1.5-flash-latest",
         systemInstruction: systemInstruction 
     });
 
