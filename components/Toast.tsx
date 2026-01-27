@@ -58,7 +58,7 @@ export default function Toast({ show, type, onClose }: ToastProps) {
         {/* Правая часть: Контент */}
         <div className="flex flex-col items-start justify-center pt-1">
             {/* Заголовок */}
-            <h3 className="text-[22px] md:text-[24px] font-bold text-black leading-tight mb-1">
+            <h3 className="text-[18px] md:text-[20px] font-ьувшгь text-black leading-tight mb-1">
                 {title}
             </h3>
             
@@ -67,7 +67,7 @@ export default function Toast({ show, type, onClose }: ToastProps) {
               href="https://www.linkedin.com/feed/" 
               target="_blank" 
               rel="noreferrer"
-              className="text-[13px] md:text-[16px] font-bold text-black hover:opacity-70 transition-opacity flex items-center underline underline-offset-4 group"
+              className="text-[13px] md:text-[13px] font-bold text-black hover:opacity-70 transition-opacity flex items-center underline underline-offset-4 group"
             >
               {btnText}
               <svg className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform no-underline" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
