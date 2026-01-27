@@ -8,17 +8,22 @@ export type PostLength = 'Short' | 'Thoughtful';
 
 const callApi = async (payload: any) => {
   try {
-    const response = await fetch('/api/generate', { // Стучимся в наш файл generate.ts
+    const response = await fetch('/api/generate', { 
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
 
-    if (!response.ok) throw new Error('Server error');
-    return await response.json();
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Server error');
+    }
+    
+    return data;
   } catch (error) {
-    console.error(error);
-    return null;
+    console.error("API Request Failed:", error); // Теперь в консоли будет видно реальную причину
+    return null; 
   }
 };
 
