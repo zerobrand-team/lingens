@@ -4,10 +4,8 @@ interface CreditContextType {
   credits: number;
   spendCredit: () => boolean;
   addCredits: (amount: number) => void;
-  // --- НОВОЕ ---
-  hasClaimedBonus: boolean;      // Забрал ли бонус?
-  claimBonus: () => void;        // Функция, чтобы забрать бонус (+10)
-  // -------------
+  hasClaimedBonus: boolean;
+  claimBonus: () => void;
   isFeedbackModalOpen: boolean;
   openFeedbackModal: () => void;
   closeFeedbackModal: () => void;
@@ -24,11 +22,9 @@ const CreditContext = createContext<CreditContextType | undefined>(undefined);
 export const CreditProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [credits, setCredits] = useState<number>(() => {
     const saved = localStorage.getItem('user_credits');
-    return saved !== null ? parseInt(saved, 10) : 30;
+    return saved !== null ? parseInt(saved, 10) : 10;
   });
 
-  // --- НОВОЕ СОСТОЯНИЕ ---
-  // Проверяем в localStorage, забирал ли он уже бонус
   const [hasClaimedBonus, setHasClaimedBonus] = useState<boolean>(() => {
     return localStorage.getItem('user_bonus_claimed') === 'true';
   });
@@ -42,7 +38,6 @@ export const CreditProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     localStorage.setItem('user_credits', credits.toString());
   }, [credits]);
 
-  // Сохраняем флаг бонуса при изменении
   useEffect(() => {
     localStorage.setItem('user_bonus_claimed', hasClaimedBonus.toString());
   }, [hasClaimedBonus]);
@@ -60,9 +55,8 @@ export const CreditProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   // --- НОВАЯ ФУНКЦИЯ ---
-  // Вызывай её, когда юзер успешно отправил опрос!
   const claimBonus = () => {
-    addCredits(10);            // Даем 10 кредитов
+    addCredits(20);            // Даем 20 кредитов
     setHasClaimedBonus(true);  // Ставим галочку "Бонус получен"
   };
   // ---------------------
