@@ -25,17 +25,22 @@ const CreditControls = () => {
   );
 };
 
-// --- Компонент: Mobile Header ---
+// --- ИНТЕРФЕЙС (ДОБАВИЛИ onLogoClick) ---
 interface HeaderProps {
     generatedPost: string;
+    onLogoClick: () => void; // <--- ВАЖНО: Функция возврата на лендинг
 }
 
-export const MobileHeader: React.FC<HeaderProps> = ({ generatedPost }) => {
+// --- Компонент: Mobile Header ---
+export const MobileHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClick }) => {
   return (
     <>
         {/* Верхняя полоска: Лого + Кредиты */}
         <div className="w-full flex justify-between items-center px-5 py-4 z-20 sticky top-0 bg-[#FFFFFF] backdrop-blur-sm border-b border-black/[0.05]">
-            <img src="/Lingens.svg" alt="Logo" className="h-5 w-auto" />
+            {/* ДОБАВИЛИ КЛИК НА ЛОГОТИП */}
+            <div onClick={onLogoClick} className="cursor-pointer active:opacity-70 transition-opacity">
+                <img src="/Lingens.svg" alt="Logo" className="h-5 w-auto" />
+            </div>
             <CreditControls />
         </div>
 
@@ -59,12 +64,15 @@ export const MobileHeader: React.FC<HeaderProps> = ({ generatedPost }) => {
 };
 
 // --- Компонент: Desktop Header ---
-export const DesktopHeader: React.FC<HeaderProps> = ({ generatedPost }) => {
+export const DesktopHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClick }) => {
   return (
     <div className="w-full border-b border-black/[0.08] justify-center py-4 z-20 sticky top-0 flex bg-white/80 backdrop-blur-md transition-all relative">
         
-        {/* Логотип (Остается на месте) */}
-        <div className="absolute left-6 top-1/2 -translate-y-1/2">
+        {/* Логотип (ДОБАВИЛИ КЛИК) */}
+        <div 
+            className="absolute left-6 top-1/2 -translate-y-1/2 cursor-pointer hover:opacity-70 transition-opacity"
+            onClick={onLogoClick}
+        >
             <img src="/Lingens.svg" alt="Lingens" className="h-6 w-auto" />
         </div>
 
@@ -75,11 +83,6 @@ export const DesktopHeader: React.FC<HeaderProps> = ({ generatedPost }) => {
                     <div className="h-[4px] rounded-full bg-black w-32"></div>
                     <span className="text-[11px] font-bold uppercase tracking-wider text-black">Step 1: Text</span>
                 </div>
-                {/* Здесь я оставил Step 2, но так как этот блок исчезнет 
-                   сразу после генерации, пользователь увидит Step 2 активным 
-                   только на долю секунды или не увидит вовсе.
-                   Логически это верно для "первого экрана".
-                */}
                 <div className="flex flex-col items-center gap-2 opacity-30">
                     <div className="h-[4px] rounded-full bg-gray-300 w-32"></div>
                     <span className="text-[11px] font-bold uppercase">Step 2: Image</span>
