@@ -43,7 +43,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
       {/* 1. HEADER (LOGO) */}
       <header className="w-full flex justify-center pt-6 md:pt-4 pb-6 border-b border-black/[0.08] z-10">
         <div className="flex items-center gap-2">
-            <img src="/Lingens.svg" alt="Lingens Logo" className="w-6 h-6" />
+            <img src="/Lingens.svg" alt="Lingens Logo" className="w-32 h-auto" />
         </div>
       </header>
 
@@ -66,7 +66,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
                 onClick={onStart}
                 className="bg-black text-white px-6 py-3 md:px-8 md:py-3 rounded-2xl md:rounded-[14px] font-bold text-lg md:text-xl hover:bg-gray-800 active:scale-95 transition-all"
             >
-                Try it for Free
+                Try for Free
             </button>
 
             <div className="flex items-center gap-3 mt-4 md:mt-6 opacity-80">
