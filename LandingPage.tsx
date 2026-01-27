@@ -8,13 +8,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
   return (
     <div className="relative min-h-screen w-full overflow-hidden flex flex-col items-center bg-cover bg-center bg-no-repeat font-sans"
          style={{
-            backgroundImage: `url('https://i.postimg.cc/xJ9H1qQj/Frame-2131329607.png')`
+            backgroundImage: `url('/bg-mob.jpg')`
          }}
     >
         <style>{`
             @media (min-width: 768px) {
                 .bg-cover {
-                    background-image: url('https://i.postimg.cc/hXc0SJYd/Desktop-18.jpg') !important;
+                    background-image: url('/bg-desk.jpg') !important;
                 }
             }
 
@@ -83,12 +83,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
       {/* Шаг 3: Картинки */}
       <div className="animate-step delay-3 w-full mt-auto flex justify-center px-4 z-10 pb-0 pt-12 md:pt-16">
           <img 
-            src="https://i.postimg.cc/QxnGcLKz/mob.png" 
+            src="/main-mob.png" 
             alt="App Interface Mobile" 
             className="block md:hidden w-full max-w-[500px] object-contain drop-shadow-2xl translate-y-1" 
           />
           <img 
-            src="https://i.postimg.cc/JtYsQm2g/bottom-image.png" 
+            src="/main-desk.png" 
             alt="App Interface Desktop" 
             className="hidden md:block w-full max-w-[1000px] object-contain drop-shadow-2xl translate-y-1" 
           />
