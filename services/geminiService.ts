@@ -1,6 +1,3 @@
-// services/geminiService.ts
-
-// Типы оставляем, они нужны компонентам
 export interface GeneratedContent {
   postText: string;
   headline: string;
@@ -9,7 +6,6 @@ export interface GeneratedContent {
 
 export type PostLength = 'Short' | 'Thoughtful';
 
-// Универсальная функция отправки
 const callApi = async (payload: any) => {
   try {
     const response = await fetch('/api/generate', { // Стучимся в наш файл generate.ts
@@ -25,8 +21,6 @@ const callApi = async (payload: any) => {
     return null;
   }
 };
-
-// === ФУНКЦИИ ДЛЯ КОМПОНЕНТОВ ===
 
 export const generateLinkedInPost = async (rawInput: string, length: PostLength = 'Thoughtful'): Promise<GeneratedContent> => {
   const data = await callApi({ 
