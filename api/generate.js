@@ -1,4 +1,3 @@
-// api/generate.js
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // === 1. ПОЛНАЯ СИСТЕМНАЯ ИНСТРУКЦИЯ ===
