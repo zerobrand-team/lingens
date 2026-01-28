@@ -64,7 +64,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
         <div className="animate-step delay-2 flex flex-col items-center">
             <button 
                 onClick={onStart}
-                className="bg-black text-white px-6 py-3 md:px-8 md:py-3 rounded-2xl md:rounded-[14px] font-bold text-lg md:text-xl hover:bg-gray-800 active:scale-95 transition-all"
+                className="bg-black text-white px-6 py-3 md:px-8 md:py-3 rounded-2xl md:rounded-[14px] tracking-[-0.07em] font-bold text-[13px] hover:bg-gray-800 active:scale-95 transition-all"
             >
                 Try for Free
             </button>
