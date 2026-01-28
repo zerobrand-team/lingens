@@ -67,7 +67,7 @@ export default async function handler(request, response) {
 
     const model = genAI.getGenerativeModel({ 
         model: "gemini-2.5-flash",
-        systemInstruction: systemInstruction 
+        systemInstruction: systemInstruction
     });
 
     const result = await model.generateContent(prompt);
