@@ -54,9 +54,6 @@ export const FeedbackModal = () => {
       });
 
       if (error) throw error;
-
-      // 2. ИЗМЕНЕНИЕ: Теперь вызываем claimBonus()
-      // Это добавит +10 кредитов И поставит галочку, что бонус получен
       claimBonus(); 
       
       setStep(4); 
@@ -85,8 +82,7 @@ export const FeedbackModal = () => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm animate-in fade-in duration-300 px-4">
-      
-      {/* Убрали min-h-[400px], чтобы не было дырки снизу */}
+
       <div className="bg-white rounded-[32px] w-full max-w-md shadow-2xl border border-gray-100 relative overflow-hidden flex flex-col p-6 md:p-8 transition-all duration-500">
         
         {step === 0 && (
@@ -104,7 +100,6 @@ export const FeedbackModal = () => {
     }} 
   />
   <div className="flex flex-col text-left">
-    {/* Ряд: Имя + Иконки */}
     <div className="flex items-center gap-2">
       <span className="font-bold text-black text-[15px] leading-tight">
         Marianna Kovalska
@@ -142,7 +137,7 @@ export const FeedbackModal = () => {
              <div className="mb-8">
                 <h2 className="text-[20px] leading-snug text-black mb-2">
                   Hey-hey! I want to give you <br/>
-                  <span className="font-bold">+10⚡ credits for free.</span>
+                  <span className="font-bold">+20⚡ credits for free.</span>
                 </h2>
                 <p className="text-black text-[20px]">
                   Just answer <span className="font-bold">3 quick questions</span> to help me improve the platform.
@@ -215,7 +210,7 @@ export const FeedbackModal = () => {
                   <div className="flex justify-between items-center">
                      <button onClick={() => setStep(2)} className="text-gray-400 font-bold">← Back</button>
                      <button onClick={handleClaim} disabled={!answers.pricing || loading} className="px-8 py-3 bg-black text-white rounded-[16px] font-bold disabled:bg-gray-200">
-                        {loading ? 'Sending...' : 'Claim 10 ⚡'}
+                        {loading ? 'Sending...' : 'Claim 20 ⚡'}
                      </button>
                   </div>
                 </>
@@ -230,7 +225,7 @@ export const FeedbackModal = () => {
                 <span className="text-4xl">⚡</span>
             </div>
             <h2 className="text-2xl font-bold mb-2">Awesome!</h2>
-            <p className="text-gray-500 mb-8">10⚡ Credits have been added to your balance.</p>
+            <p className="text-gray-500 mb-8">20⚡ Credits have been added to your balance.</p>
             <button onClick={closeFeedbackModal} className="w-full py-4 bg-black text-white rounded-[18px] font-bold">Great, thanks!</button>
           </div>
         )}
