@@ -48,7 +48,6 @@ export const FeedbackModal = () => {
     };
 
     try {
-      // Вызываем RPC функцию в Supabase
       const { error } = await supabase.rpc('submit_survey_and_claim', {
         payload: finalData
       });
@@ -148,7 +147,7 @@ export const FeedbackModal = () => {
                onClick={() => setStep(1)}
                className="w-full py-4 bg-black text-white rounded-[18px] font-bold hover:scale-[1.02] active:scale-95 transition-all"
              >
-                Start & Get +10 ⚡ Credits
+                Start & Get +20 ⚡ Credits
              </button>
           </div>
         )}
