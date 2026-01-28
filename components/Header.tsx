@@ -36,7 +36,7 @@ export const MobileHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClick
   return (
     <>
         {/* Верхняя полоска: Лого + Кредиты */}
-        <div className="w-full flex justify-between items-center px-5 py-4 z-20 sticky top-0 bg-[#FFFFFF] backdrop-blur-sm border-b border-black/[0.05]">
+        <div className="w-full flex justify-between items-center px-5 py-4 z-20 sticky top-0 backdrop-blur-sm border-b border-black/[0.05]">
             {/* ДОБАВИЛИ КЛИК НА ЛОГОТИП */}
             <div onClick={onLogoClick} className="cursor-pointer active:opacity-70 transition-opacity">
                 <img src="/Lingens.svg" alt="Logo" className="h-8 w-auto" />
@@ -66,7 +66,7 @@ export const MobileHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClick
 // --- Desktop Header ---
 export const DesktopHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClick }) => {
   return (
-    <div className="w-full h-[70px] items-center border-b border-black/[0.08] justify-center py-6 z-20 sticky top-0 flex bg-white/80 backdrop-blur-md transition-all relative">
+    <div className="w-full h-[60px] items-center border-b border-black/[0.08] justify-center py-6 z-20 sticky top-0 flex backdrop-blur-md transition-all relative">
         
         {/* Логотип */}
         <div 
