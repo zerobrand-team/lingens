@@ -1,14 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../supabaseClient'; // Убедитесь, что путь правильный
 
 interface CreditContextType {
   credits: number;
-  refreshCredits: () => Promise<void>; // Функция для обновления баланса с сервера
-  
+  spendCredit: () => boolean;
+  addCredits: (amount: number) => void;
   hasClaimedBonus: boolean;
-  // checkBonusStatus удалили, так как refreshCredits обновляет всё сразу
-
-  // Модалки
+  claimBonus: () => void;
   isFeedbackModalOpen: boolean;
   openFeedbackModal: () => void;
   closeFeedbackModal: () => void;
@@ -23,60 +20,56 @@ interface CreditContextType {
 const CreditContext = createContext<CreditContextType | undefined>(undefined);
 
 export const CreditProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // 1. Начальное состояние теперь 0 (пока не загрузимся)
-  const [credits, setCredits] = useState<number>(0);
-  const [hasClaimedBonus, setHasClaimedBonus] = useState<boolean>(false);
+  const [credits, setCredits] = useState<number>(() => {
+    const saved = localStorage.getItem('user_credits');
+    return saved !== null ? parseInt(saved, 10) : 10;
+  });
 
-  // Модалки
+  const [hasClaimedBonus, setHasClaimedBonus] = useState<boolean>(() => {
+    return localStorage.getItem('user_bonus_claimed') === 'true';
+  });
+  // -----------------------
+
   const [isFeedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [isSecretModalOpen, setSecretModalOpen] = useState(false);
   const [isLimitModalOpen, setLimitModalOpen] = useState(false);
 
-  // 2. Главная функция: Загрузка данных из Supabase
-  const refreshCredits = async () => {
-    // Получаем текущего юзера
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    // Если юзер не залогинен — выходим (или ставим 0)
-    if (!user) return; 
+  useEffect(() => {
+    localStorage.setItem('user_credits', credits.toString());
+  }, [credits]);
 
-    // Делаем запрос в таблицу profiles
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('credits, has_claimed_survey')
-      .eq('id', user.id)
-      .single();
+  useEffect(() => {
+    localStorage.setItem('user_bonus_claimed', hasClaimedBonus.toString());
+  }, [hasClaimedBonus]);
 
-    if (data) {
-      setCredits(data.credits);
-      setHasClaimedBonus(data.has_claimed_survey);
+  const spendCredit = () => {
+    if (credits > 0) {
+      setCredits(prev => prev - 1);
+      return true;
     }
+    return false;
   };
 
-  // 3. Загружаем данные при старте приложения
-  useEffect(() => {
-    refreshCredits();
+  const addCredits = (amount: number) => {
+    setCredits((prev) => prev + amount);
+  };
 
-    // (Опционально) Подписка на изменения в реальном времени
-    // Если вы что-то измените в базе, цифра обновится сама
-    const subscription = supabase
-      .channel('public:profiles')
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'profiles' }, (payload) => {
-        refreshCredits();
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(subscription);
-    };
-  }, []);
+  // --- НОВАЯ ФУНКЦИЯ ---
+  const claimBonus = () => {
+    addCredits(20);            // Даем 20 кредитов
+    setHasClaimedBonus(true);  // Ставим галочку "Бонус получен"
+  };
+  // ---------------------
 
   return (
     <CreditContext.Provider value={{ 
       credits, 
-      refreshCredits, // Теперь мы экспортируем эту функцию вместо spendCredit
+      spendCredit, 
+      addCredits,
       
+      // Передаем новые значения
       hasClaimedBonus,
+      claimBonus,
 
       isFeedbackModalOpen,
       openFeedbackModal: () => setFeedbackModalOpen(true),
