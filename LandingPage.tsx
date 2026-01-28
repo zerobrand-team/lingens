@@ -41,7 +41,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
         `}</style>
 
       {/* 1. HEADER (LOGO) */}
-      <header className="w-full flex justify-center pt-6 md:pt-4 pb-6 border-b border-black/[0.08] z-10">
+      <header className="w-full h-24 flex justify-center pt-6 md:pt-4 pb-6 border-b border-black/[0.08] z-10">
         <div className="flex items-center gap-2">
             <img src="/Lingens.svg" alt="Lingens Logo" className="w-24 h-auto" />
         </div>
@@ -64,7 +64,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
         <div className="animate-step delay-2 flex flex-col items-center">
             <button 
                 onClick={onStart}
-                className="bg-black text-white px-6 py-3 md:px-8 md:py-3 rounded-2xl md:rounded-[14px] tracking-[-0.07em] font-bold text-[13px] hover:bg-gray-800 active:scale-95 transition-all"
+                className="bg-black text-white px-6 py-3 md:px-8 md:py-3 rounded-2xl md:rounded-[14px] tracking-[-0.04em] font-bold text-[15px] hover:bg-gray-800 active:scale-95 transition-all"
             >
                 Try for Free
             </button>
