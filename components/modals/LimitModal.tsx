@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCredits } from '../../context/CreditContext';
 
-export const LimitReachedModal: React.FC = () => {
+export const LimitModal: React.FC = () => {
   const { isLimitModalOpen, closeLimitModal } = useCredits();
 
   if (!isLimitModalOpen) return null;
