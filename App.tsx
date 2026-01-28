@@ -98,9 +98,7 @@ const App: React.FC = () => {
     }
   }, [generatedPost]);
 
-  // --- NAVIGATION HANDLERS ---
-  
-  // 1. Возврат на лендинг при клике на лого
+  // --- NAVIGATION ---
   const handleLogoClick = () => {
     setShowLanding(true);
   };
@@ -252,7 +250,6 @@ const App: React.FC = () => {
     return (
       <div className={`min-h-screen w-full overflow-x-hidden flex flex-col bg-[#E8EBF0]`}>
 
-        {/* ПЕРЕДАЕМ onLogoClick СЮДА */}
         <MobileHeader 
             generatedPost={generatedPost} 
             onLogoClick={handleLogoClick} 
@@ -466,7 +463,7 @@ const App: React.FC = () => {
                             <div className="flex justify-between items-center">
                                 <button 
                                     onClick={handleCopyPost} 
-                                    className="h-[42px] w-full justify-center px-6 bg-[linear-gradient(100deg,#ED8851_9%,#E7DFDD_41%,#D3EAFA_56%,#3BA4F5_89%)] text-black rounded-[14px] font-bold text-sm transition-all active:scale-95 flex items-center gap-2
+                                    className="h-[42px] w-full justify-center px-6 bg-black text-white rounded-[14px] font-bold text-sm transition-all active:scale-95 flex items-center gap-2
                                     border border-transparent bg-no-repeat bg-cover bg-center bg-origin-border hover:border-black/20 active:scale-[0.98]"
                                 >
                                     {isCopied ? <span>Copied</span> : <span>Copy Text</span>}
@@ -721,13 +718,26 @@ const App: React.FC = () => {
                                     rows={1} 
                                 />
                             </div>
-                            <div className="flex justify-between items-right mt-6">
+                            <div className="flex justify-between items-center mt-6">
                                 <button 
                                     onClick={handleCopyPost} 
-                                    className="h-[42px] px-6 bg-[linear-gradient(100deg,#ED8851_9%,#E7DFDD_41%,#D3EAFA_56%,#3BA4F5_89%)] text-black rounded-[14px] font-bold text-sm transition-all active:scale-95 flex items-center gap-2
-                                    border border-transparent bg-no-repeat bg-cover bg-center bg-origin-border hover:border-black/20 active:scale-[0.98]"
+                                    className="h-[42px] px-6 bg-black text-white rounded-[14px] font-bold text-sm transition-all active:scale-95 flex items-center gap-2"
                                 >
-                                    {isCopied ? <span>Copied</span> : <span>Copy text</span>}
+                                    {isCopied ? (
+                                      <>
+                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        <span>Copied</span>
+                                      </>
+                                  ) : (
+                                    <>
+                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                        </svg>
+                                        <span>Copy text</span>
+                                    </>
+                                  )}
                                 </button>
                             </div>
                            </div>
