@@ -58,7 +58,7 @@ export default function Toast({ show, type, onClose }: ToastProps) {
         {/* Правая часть: Контент */}
         <div className="flex flex-col items-start justify-center pt-1">
             {/* Заголовок */}
-            <h3 className="text-[18px] md:text-[20px] font-ьувшгь text-black leading-tight mb-1">
+            <h3 className="text-[18px] md:text-[20px] font-medium text-black leading-tight mb-1">
                 {title}
             </h3>
             
