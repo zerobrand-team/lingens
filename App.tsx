@@ -12,6 +12,7 @@ import Toast from './components/Toast';
 import { useCredits } from './context/CreditContext';
 import { GenerateButton } from './components/GenerateButton'; 
 import { FeedbackModal } from './components/modals/FeedbackModal';
+import { LimitModal } from './components/modals/LimitModal';
 
 const tplMinimal = "/templates/minimal.png";
 const tplBottom = "/templates/bottom.png";
@@ -61,7 +62,7 @@ const App: React.FC = () => {
   const [selectedLength, setSelectedLength] = useState<PostLength>('Thoughtful');
   
   // Кредиты
-  const {credits, spendCredit, openFeedbackModal } = useCredits();
+  const {credits, spendCredit, openFeedbackModal, openLimitModal, hasClaimedBonus} = useCredits();
 
   // Визуал
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateStyle>(TemplateStyle.BOLD_TEXT_OVERLAY);
@@ -135,9 +136,14 @@ const App: React.FC = () => {
     if (!rawInput.trim()) return;
     const isSpent = spendCredit();
     if (!isSpent) {
-      openFeedbackModal(); 
-      return;
+        if (!hasClaimedBonus) {
+          openFeedbackModal();
+        } else {
+          openLimitModal();
+        }
+        return;
     }
+    
     setIsGenerating(true);
     try {
       const content = await generateLinkedInPost(rawInput, selectedLength);
@@ -168,7 +174,11 @@ const App: React.FC = () => {
     if (!rawInput.trim()) return;
     const isSpent = spendCredit();
     if (!isSpent) {
-        openFeedbackModal();
+        if (!hasClaimedBonus) {
+          openFeedbackModal();
+        } else {
+          openLimitModal();
+        }
         return;
     }
     setIsRegeneratingText(true);
@@ -884,6 +894,7 @@ const App: React.FC = () => {
       />
 
       <FeedbackModal />
+      <LimitModal />
 
     </>
   );
