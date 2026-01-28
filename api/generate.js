@@ -129,7 +129,7 @@ export default async function handler(request, response) {
 
     // Модель 2.0 Flash (как в вашем первом коде)
     const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.0-flash-exp", 
+        model: "gemini-2.5-flash", 
         systemInstruction: SYSTEM_INSTRUCTION 
     });
 
