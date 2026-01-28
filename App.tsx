@@ -13,8 +13,6 @@ import { useCredits } from './context/CreditContext';
 import { GenerateButton } from './components/GenerateButton'; 
 import { FeedbackModal } from './components/modals/FeedbackModal';
 import { LimitModal } from './components/modals/LimitModal';
-// 1. Добавляем импорт Supabase
-import { supabase } from './supabaseClient';
 
 const tplMinimal = "/templates/minimal.png";
 const tplBottom = "/templates/bottom.png";
@@ -63,14 +61,8 @@ const App: React.FC = () => {
   const [toast, setToast] = useState<{ show: boolean; type: 'copy' | 'download' }>({ show: false, type: 'copy' });
   const [selectedLength, setSelectedLength] = useState<PostLength>('Thoughtful');
   
-  // 2. Обновляем Context: убрали spendCredit, добавили refreshCredits
-  const {
-    credits, 
-    refreshCredits, 
-    openFeedbackModal, 
-    openLimitModal, 
-    hasClaimedBonus
-  } = useCredits();
+  // Кредиты
+  const {credits, spendCredit, openFeedbackModal, openLimitModal, hasClaimedBonus} = useCredits();
 
   // Визуал
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateStyle>(TemplateStyle.BOLD_TEXT_OVERLAY);
@@ -111,8 +103,11 @@ const App: React.FC = () => {
     setShowLanding(true);
   };
 
+  // 2. Старт с лендинга
   const handleStartApp = () => {
     setShowLanding(false);
+    // Можно показывать модалку только один раз, если нужно, но пока оставим как ты хотела
+    // setShowHowItWorks(true); 
   };
 
   const saveToHistory = (post: string, visuals: VisualState, template: TemplateStyle) => {
@@ -135,31 +130,21 @@ const App: React.FC = () => {
     });
   }, []);
 
-  // 3. БЕЗОПАСНАЯ ГЕНЕРАЦИЯ
   const handleGenerate = async () => {
     if (!rawInput.trim()) return;
-
-    // Шаг А: Пытаемся списать кредит на сервере
-    const { data: success, error } = await supabase.rpc('spend_credit');
-
-    // Если ошибка или вернулось false (нет денег)
-    if (error || !success) {
+    const isSpent = spendCredit();
+    if (!isSpent) {
         if (!hasClaimedBonus) {
           openFeedbackModal();
         } else {
           openLimitModal();
         }
-        return; // Стоп, дальше не идем
+        return;
     }
-
-    // Обновляем UI (чтобы цифра сразу уменьшилась)
-    refreshCredits();
     
     setIsGenerating(true);
     try {
-      // Шаг Б: Генерация AI
       const content = await generateLinkedInPost(rawInput, selectedLength);
-      
       setGeneratedPost(content.postText);
       const newVisuals = {
         ...visualData,
@@ -177,25 +162,16 @@ const App: React.FC = () => {
          setViewMode('templates');
       }
     } catch (error) {
-      console.error(error);
-      alert("Error generating content. Credit refunded.");
-      
-      // Шаг В: Возврат средств при ошибке
-      await supabase.rpc('refund_credit');
-      refreshCredits(); // Обновляем баланс обратно
+      alert("Error generating content");
     } finally {
       setIsGenerating(false);
     }
   };
 
-  // 4. БЕЗОПАСНАЯ РЕГЕНЕРАЦИЯ (Тоже требует кредитов)
   const handleRegenerateText = async () => {
     if (!rawInput.trim()) return;
-
-    // Шаг А: Списание
-    const { data: success, error } = await supabase.rpc('spend_credit');
-
-    if (error || !success) {
+    const isSpent = spendCredit();
+    if (!isSpent) {
         if (!hasClaimedBonus) {
           openFeedbackModal();
         } else {
@@ -203,19 +179,12 @@ const App: React.FC = () => {
         }
         return;
     }
-    refreshCredits();
-
     setIsRegeneratingText(true);
     try {
-        // Шаг Б: Генерация
         const newText = await regeneratePostText(rawInput, generatedPost, selectedLength);
         setGeneratedPost(newText);
     } catch (e) {
         console.error(e);
-        alert("Error regenerating. Credit refunded.");
-        // Шаг В: Возврат
-        await supabase.rpc('refund_credit');
-        refreshCredits();
     } finally {
         setIsRegeneratingText(false);
     }
@@ -418,10 +387,10 @@ const App: React.FC = () => {
                                 {showHistory && (
                                     <div className="absolute inset-0 bg-white z-50 p-6 flex flex-col animate-in fade-in duration-200">
                                        <div className="flex justify-between items-center mb-6">
-                                            <h3 className="text-2xl font-medium text-black">History</h3>
-                                            <button onClick={() => setShowHistory(false)} className="text-gray-400 hover:text-black text-sm font-bold">
-                                                 Close
-                                            </button>
+                                           <h3 className="text-2xl font-medium text-black">History</h3>
+                                           <button onClick={() => setShowHistory(false)} className="text-gray-400 hover:text-black text-sm font-bold">
+                                               Close
+                                           </button>
                                        </div>
                                        <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4">
                                             {history.map(item => (
@@ -702,17 +671,17 @@ const App: React.FC = () => {
                             <div className="flex items-center">
                                 <div className="relative group mr-1">
                                     <select
-                                            value={selectedLength}
-                                            onChange={(e) => setSelectedLength(e.target.value as PostLength)}
-                                            className="appearance-none bg-transparent py-1 pl-2 pr-5 text-[13px] font-medium text-gray-400 hover:text-black cursor-pointer focus:outline-none transition-colors text-right"
+                                        value={selectedLength}
+                                        onChange={(e) => setSelectedLength(e.target.value as PostLength)}
+                                        className="appearance-none bg-transparent py-1 pl-2 pr-5 text-[13px] font-medium text-gray-400 hover:text-black cursor-pointer focus:outline-none transition-colors text-right"
                                     >
                                         <option value="Short">Short</option>
                                         <option value="Thoughtful">Thoughtful</option>
                                     </select>
                                     <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-black">
-                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                                                <path d="M6 9l6 6 6-6" />
-                                            </svg>
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                                            <path d="M6 9l6 6 6-6" />
+                                        </svg>
                                     </div>
                                 </div>
 
@@ -721,7 +690,7 @@ const App: React.FC = () => {
                                 <div className="flex items-center gap-1 font-medium text-sm text-gray-400 select-none">
                                     <span>{credits}</span>
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#FBBF24" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#FBBF24" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                 </div>
 
@@ -733,7 +702,7 @@ const App: React.FC = () => {
                                     className="text-gray-400 hover:text-black transition-colors"
                                 >
                                     <svg className={`w-4 h-4 ${isRegeneratingText ? 'animate-spin text-black' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                     </svg>
                                 </button>
                             </div>
@@ -761,14 +730,14 @@ const App: React.FC = () => {
                                         </svg>
                                         <span>Copied</span>
                                       </>
-                                    ) : (
-                                      <>
-                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                                              <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                            </svg>
-                                            <span>Copy text</span>
-                                      </>
-                                    )}
+                                  ) : (
+                                    <>
+                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                        </svg>
+                                        <span>Copy text</span>
+                                    </>
+                                  )}
                                 </button>
                             </div>
                            </div>
@@ -782,18 +751,18 @@ const App: React.FC = () => {
                            <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4">
                                {history.length === 0 && (
                                    <div className="flex flex-col items-center justify-center mt-20 select-none">
-                                            <div className="w-24 h-24 bg-white flex items-center justify-center mb-3">
-                                                 <svg className="w-20 h-20 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                                                 </svg>
-                                            </div>
-                                            <p className="text-sm font-medium text-gray-400">History is empty</p>
+                                        <div className="w-24 h-24 bg-white flex items-center justify-center mb-3">
+                                             <svg className="w-20 h-20 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                                             </svg>
+                                        </div>
+                                        <p className="text-sm font-medium text-gray-400">History is empty</p>
                                    </div>
                                )}
                                {history.map(item => (
                                    <button key={item.id} onClick={() => { setGeneratedPost(item.postText); setVisualData(item.visualData); setSelectedTemplate(item.template); setShowHistory(false); }} className="w-full p-4 bg-[#F5F7F9] rounded-[20px] hover:bg-gray-100 transition-all text-left">
-                                            <p className="text-sm font-bold truncate text-black">{item.visualData.headline || "Untitled"}</p>
-                                            <p className="text-xs text-gray-500 line-clamp-1 mt-1">{item.postText}</p>
+                                        <p className="text-sm font-bold truncate text-black">{item.visualData.headline || "Untitled"}</p>
+                                        <p className="text-xs text-gray-500 line-clamp-1 mt-1">{item.postText}</p>
                                    </button>
                                ))}
                             </div>
