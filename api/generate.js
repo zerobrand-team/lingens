@@ -1,10 +1,10 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-// === 1. ВАШИ СЕКРЕТНЫЕ ИНСТРУКЦИИ ===
+// === 1. ТВОРЧЕСКАЯ ИНСТРУКЦИЯ (ДУША) ===
+// Здесь НЕТ ни слова про JSON. Только стиль, тон и задачи.
 const SYSTEM_INSTRUCTION = `
 ### ROLE & OBJECTIVE
-You translate my thoughts into English LinkedIn posts. Your main goal is clarity and structure without changing my voice.
-This should feel like I’m speaking, just clearer and more readable.
+You translate my thoughts into English LinkedIn posts. Your main goal is clarity and structure without changing my voice. This should feel like I’m speaking, just clearer and more readable.
 
 ### LANGUAGE & TONE RULES
 - Use simple, conversational English.
@@ -23,70 +23,99 @@ const REGENERATE_ANGLES = [
   "Make it punchy, direct, and slightly contrarian.",
   "Use a storytelling approach: start with a specific moment in time.",
   "Focus on the 'Lesson Learned' aspect, be very practical.",
-  "Make it sound like a quick observation made on the go (casual vibe).",
   "Highlight the contrast between expectation vs reality."
 ];
 
 const VISUAL_ANGLES = ["Provocative & Bold", "Minimalist & Mysterious", "Direct & Value-driven", "Emotional & Personal"];
 
-export default async function handler(request, response) {
-  // Разрешаем CORS (чтобы работало с фронтенда)
+module.exports = async function handler(request, response) {
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (request.method === 'OPTIONS') {
-    return response.status(200).end();
-  }
-
-  if (request.method !== 'POST') {
-    return response.status(405).json({ error: 'Method Not Allowed' });
-  }
+  if (request.method === 'OPTIONS') return response.status(200).end();
+  if (request.method !== 'POST') return response.status(405).json({ error: 'Method Not Allowed' });
 
   try {
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) throw new Error("API Key is missing on server");
+    if (!apiKey) return response.status(500).json({ error: "API Key missing" });
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const { action, rawInput, length, field } = request.body;
 
-    // Выбираем инструкцию
-    let prompt = "";
-    let systemInstruction = SYSTEM_INSTRUCTION; // Базовая инструкция
+    // === 2. ТЕХНИЧЕСКИЙ КОНВЕРТ (ТЕЛО) ===
+    let userPrompt = "";
+    
+    const jsonFormatInstruction = `
+    CRITICAL TECHNICAL REQUIREMENT:
+    Return ONLY a raw JSON object (no markdown, no code blocks) with this structure:
+    {
+      "postText": "The creative output text...",
+      "headline": "A short engaging headline (max 7 words)",
+      "subHeadline": "A short context line"
+    }`;
 
     if (action === 'generatePost') {
         const lengthText = length === 'Short' ? "Short & Punchy" : "Thoughtful Storytelling";
-        prompt = `Task: Create a LinkedIn post. Input: "${rawInput}". Style: ${lengthText}. Return JSON only.`;
+        userPrompt = `
+        TASK: Write a LinkedIn post based on the INPUT below.
+        STYLE: ${lengthText}
+        INPUT: "${rawInput}"
+        
+        ${jsonFormatInstruction}
+        `;
     } else if (action === 'regenerateText') {
         const angle = REGENERATE_ANGLES[Math.floor(Math.random() * REGENERATE_ANGLES.length)];
-        prompt = `Rewrite this post with a new angle: ${angle}. Input: "${rawInput}". Return JSON.`;
+        userPrompt = `
+        TASK: Rewrite this post text.
+        NEW ANGLE: ${angle}
+        INPUT POST: "${rawInput}"
+        
+        RETURN JSON: { "postText": "New text here..." }
+        `;
     } else if (action === 'regenerateVisualField') {
          const angle = VISUAL_ANGLES[Math.floor(Math.random() * VISUAL_ANGLES.length)];
-         prompt = `Generate a ${field} for this post. Style: ${angle}. Context: "${rawInput}". Return JSON.`;
+         userPrompt = `
+         TASK: Generate a ${field}.
+         STYLE: ${angle}
+         CONTEXT: "${rawInput}"
+         
+         RETURN JSON: { "text": "New headline/subheadline..." }
+         `;
     }
 
+    // Используем Gemini 2.5 Flash
     const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.5-flash",
-        systemInstruction: systemInstruction
+        model: "gemini-2.5-flash", 
+        systemInstruction: SYSTEM_INSTRUCTION // <-- Сюда идет только чистая творческая инструкция
     });
 
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent(userPrompt);
     const text = result.response.text();
-
-    // Чистим ответ от markdown json, если есть
+    
     const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
-    // Пытаемся распарсить JSON, если модель вернула строку - заворачиваем в объект
     try {
         const jsonResponse = JSON.parse(cleanText);
+        
+        if (action === 'generatePost') {
+            if (!jsonResponse.headline) jsonResponse.headline = "New Post";
+            if (!jsonResponse.subHeadline) jsonResponse.subHeadline = "Generated by AI";
+        }
+        
         return response.status(200).json(jsonResponse);
+
     } catch (e) {
-        // Если пришел просто текст (бывает при ошибках модели), отдаем как есть
-        return response.status(200).json({ postText: cleanText, text: cleanText });
+        console.error("JSON Parse Error:", e);
+        return response.status(200).json({ 
+            postText: cleanText, 
+            headline: "Format Error", 
+            subHeadline: "Please try again" 
+        });
     }
 
   } catch (error) {
     console.error("Server Error:", error);
     return response.status(500).json({ error: error.message });
   }
-}
+};
