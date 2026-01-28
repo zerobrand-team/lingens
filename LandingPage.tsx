@@ -41,7 +41,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
         `}</style>
 
       {/* 1. HEADER (LOGO) */}
-      <header className="w-full h-24 flex justify-center pt-6 md:pt-4 pb-6 border-b border-black/[0.08] z-10">
+      <header className="w-full flex justify-center pt-6 md:pt-4 pb-6 border-b border-black/[0.08] z-10">
         <div className="flex items-center gap-2">
             <img src="/Lingens.svg" alt="Lingens Logo" className="w-24 h-auto" />
         </div>
