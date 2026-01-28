@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-// 1. Импортируем refreshCredits вместо claimBonus
 import { useCredits } from '../../context/CreditContext';
 import { supabase } from '../../supabaseClient';
 
 export const FeedbackModal = () => {
-  const { 
-    isFeedbackModalOpen, 
-    closeFeedbackModal, 
-    refreshCredits // <--- Используем это для обновления баланса
-  } = useCredits();
+  // 1. ИЗМЕНЕНИЕ: Добавили claimBonus
+  const { isFeedbackModalOpen, claimBonus, closeFeedbackModal } = useCredits();
   
   // 0=Intro, 1=PMF, 2=Missing, 3=Pricing, 4=Success
   const [step, setStep] = useState(0); 
@@ -52,23 +48,17 @@ export const FeedbackModal = () => {
     };
 
     try {
-      // 2. Вызываем защищенную функцию в БД
-      // Она сама добавит +20 кредитов в таблицу profiles
       const { error } = await supabase.rpc('submit_survey_and_claim', {
         payload: finalData
       });
 
       if (error) throw error;
-
-      // 3. ВАЖНО: Обновляем интерфейс
-      // Мы не добавляем кредиты вручную, мы просто запрашиваем актуальный баланс
-      await refreshCredits(); 
+      claimBonus(); 
       
-      setStep(4); // Показываем экран успеха
+      setStep(4); 
 
     } catch (error: any) {
       console.error(error);
-      // Обработка ошибки, если пользователь пытается получить бонус второй раз
       if (error.message?.includes('Bonus already claimed')) {
         alert("You have already claimed this bonus 😉");
         closeFeedbackModal();
@@ -98,26 +88,50 @@ export const FeedbackModal = () => {
           <div className="animate-in slide-in-from-bottom-4 duration-300 flex flex-col relative">
              <div className="absolute -top-2 -right-2"><CloseButton /></div>
              
-            {/* Хедер с аватаром */}
-            <div className="flex items-center gap-4 mb-6">
-              <img 
-                src="/avatar.png" 
-                alt="Founder" 
-                className="w-12 h-12 rounded-full object-cover bg-gray-100 border border-gray-100"
-                onError={(e) => {
-                  e.currentTarget.src = 'https://api.dicebear.com/9.x/initials/svg?seed=Marianna&backgroundColor=E5E7EB&textColor=111827&fontWeight=600'
-                }} 
-              />
-              <div className="flex flex-col text-left">
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-black text-[15px] leading-tight">
-                    Marianna Kovalska
-                  </span>
-                  {/* Social Icons removed for brevity, keep yours */}
-                </div>
-                <span className="text-gray-400 text-xs">Founder Lingens</span>
-              </div>
-            </div>
+{/* Хедер с аватаром и соцсетями */}
+<div className="flex items-center gap-4 mb-6">
+  <img 
+    src="/avatar.png" 
+    alt="Founder" 
+    className="w-12 h-12 rounded-full object-cover bg-gray-100 border border-gray-100"
+    onError={(e) => {
+      e.currentTarget.src = 'https://api.dicebear.com/9.x/initials/svg?seed=Marianna&backgroundColor=E5E7EB&textColor=111827&fontWeight=600'
+    }} 
+  />
+  <div className="flex flex-col text-left">
+    <div className="flex items-center gap-2">
+      <span className="font-bold text-black text-[15px] leading-tight">
+        Marianna Kovalska
+      </span>
+      
+      {/* LinkedIn */}
+      <a 
+        href="https://www.linkedin.com/in/voreio/" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="text-gray-400 hover:text-[#0A66C2] transition-colors leading-none"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+        </svg>
+      </a>
+
+      {/* Telegram */}
+      <a 
+        href="https://t.me/voreio" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="text-gray-400 hover:text-[#229ED9] transition-colors leading-none"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.891 7.021l-2.02 9.551c-.15.682-.557.85-1.126.531l-3.09-2.284-1.49 1.435c-.165.165-.303.302-.622.302l.221-3.142 5.719-5.166c.249-.221-.054-.344-.381-.127l-7.069 4.449-3.048-.953c-.663-.209-.676-.663.138-.981l11.915-4.591c.552-.201 1.035.13 1.035.811z"/>
+        </svg>
+      </a>
+    </div>
+    
+    <span className="text-gray-400 text-xs">Founder Lingens</span>
+  </div>
+</div>
 
              <div className="mb-8">
                 <h2 className="text-[20px] leading-snug text-black mb-2">
@@ -157,10 +171,11 @@ export const FeedbackModal = () => {
                       <button key={opt} onClick={() => handleSelect('pmf', opt, 2)} className="w-full p-4 text-left border border-gray-100 rounded-[18px] font-medium hover:border-black transition-all">{opt}</button>
                     ))}
                   </div>
+
                   <div className="mt-6">
                     <button onClick={() => setStep(0)} className="text-sm font-bold text-gray-400 hover:text-black transition-colors">
                       ← Back to Intro
-                    </button>
+                  </button>
                 </div>
                 </>
              )}
@@ -192,10 +207,10 @@ export const FeedbackModal = () => {
                     ))}
                   </div>
                   <div className="flex justify-between items-center">
-                      <button onClick={() => setStep(2)} className="text-gray-400 font-bold">← Back</button>
-                      <button onClick={handleClaim} disabled={!answers.pricing || loading} className="px-8 py-3 bg-black text-white rounded-[16px] font-bold disabled:bg-gray-200">
-                         {loading ? 'Sending...' : 'Claim 20 ⚡'}
-                      </button>
+                     <button onClick={() => setStep(2)} className="text-gray-400 font-bold">← Back</button>
+                     <button onClick={handleClaim} disabled={!answers.pricing || loading} className="px-8 py-3 bg-black text-white rounded-[16px] font-bold disabled:bg-gray-200">
+                        {loading ? 'Sending...' : 'Claim 20 ⚡'}
+                     </button>
                   </div>
                 </>
              )}
