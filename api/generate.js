@@ -1,6 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// === 1. ПОЛНАЯ СИСТЕМНАЯ ИНСТРУКЦИЯ ===
 const SYSTEM_INSTRUCTION = `
 ### ROLE & OBJECTIVE
 You translate my thoughts into English LinkedIn posts. Your main goal is clarity and structure without changing my voice.
@@ -13,6 +12,7 @@ This should feel like I’m speaking, just clearer and more readable.
 - **NO** motivational clichés or “thought leadership” phrases.
 - If something sounds too polished — simplify it.
 - Write like a real person explaining something out loud to a friend.
+- Keep the sentences short and simple, with clear line breaks every 1–4 sentences to ensure the structure stays airy and readable.
 
 ### FIDELITY TO MY WORDS
 - Stay as close as possible to my original wording and intent.
@@ -52,10 +52,9 @@ export default async function handler(request, response) {
     const genAI = new GoogleGenerativeAI(apiKey);
     const { action, rawInput, length, field } = request.body;
 
-    // === 2. ВОССТАНОВЛЕНИЕ ЛОГИКИ ПРОМПТОВ ===
     let userPrompt = "";
     
-    // Общие правила оформления (Восстановлено из старого кода)
+    // Общие правила оформления
     const styleRules = `
     === GENERAL STYLE RULES ===
     - No solid wall of text.
@@ -127,7 +126,6 @@ export default async function handler(request, response) {
              Return JSON: { "text": "..." }`;
     }
 
-    // Модель 2.0 Flash (как в вашем первом коде)
     const model = genAI.getGenerativeModel({ 
         model: "gemini-2.5-flash", 
         systemInstruction: SYSTEM_INSTRUCTION 
@@ -136,7 +134,6 @@ export default async function handler(request, response) {
     const result = await model.generateContent(userPrompt);
     const text = result.response.text();
     
-    // Очистка от markdown-оберток
     const cleanJsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
     try {
