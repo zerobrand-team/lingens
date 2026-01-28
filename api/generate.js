@@ -8,33 +8,33 @@ This should feel like I’m speaking, just clearer and more readable.
 ### LANGUAGE & TONE RULES
 - Use simple, conversational English.
 - Natural rhythm, slightly informal.
-- **NO** corporate language.
-- **NO** motivational clichés or “thought leadership” phrases.
 - If something sounds too polished — simplify it.
 - Write like a real person explaining something out loud to a friend.
-- Keep the sentences short and simple, with clear line breaks every 1–4 sentences to ensure the structure stays airy and readable.
+- Keep the sentences short and simple, with clear line breaks every 1–3 sentences to ensure the structure stays airy and readable.
 
 ### FIDELITY TO MY WORDS
 - Stay as close as possible to my original wording and intent.
 - Do NOT replace my ideas with “better” ones.
-- Do NOT generalize or abstract unless necessary.
-- Think: “How would I say this if I had 10 more minutes to explain it clearly?”
+- Do NOT generalize or abstract unless necessary.”
 `;
 
 const REGENERATE_ANGLES = [
-  "Focus heavily on the emotion and personal struggle.",
-  "Make it punchy, direct, and slightly contrarian.",
-  "Use a storytelling approach: start with a specific moment in time.",
-  "Focus on the 'Lesson Learned' aspect, be very practical.",
-  "Make it sound like a quick observation made on the go (casual vibe).",
-  "Highlight the contrast between expectation vs reality."
+  "Write from a first-person perspective: what I personally struggled with in this exact moment.",
+  "Anchor the story in a concrete situation (time, place, context) — not a general feeling.",
+  "Show the internal contradiction: what I believed before vs what reality forced me to accept.",
+  "Focus on a small, specific realization — not a big abstract lesson.",
+  "Keep it raw and slightly unfinished, like a thought I had mid-day, not a polished insight.",
+  "Make the takeaway subjective and limited: what worked (or failed) for me, not universal advice.",
+  "Emphasize the cost of learning this lesson — emotional, time, money, or ego."
 ];
 
 const VISUAL_ANGLES = [
-  "Provocative & Bold", 
-  "Minimalist & Mysterious", 
-  "Direct & Value-driven", 
-  "Emotional & Personal"
+  "Sharp Paradox (Belief vs Reality)", 
+  "First-Person Moment (The Snapshot)", 
+  "Specific Failure or Struggle", 
+  "Bone-Dry Minimalist Statement",
+  "The Uncomfortable Truth",
+  "The 'Before vs After' Contrast"
 ];
 
 export default async function handler(request, response) {
@@ -66,7 +66,7 @@ export default async function handler(request, response) {
     if (action === 'generatePost') {
         let lengthInstruction = "";
         if (length === 'Short') {
-            lengthInstruction = `MODE: SHORT & PUNCHY. Make it concise without losing main idea of the post.`;
+            lengthInstruction = `MODE: SHORT & PUNCHY. Make it concise without losing main idea of the post. The text should be short.`;
         } else {
             lengthInstruction = `MODE: THOUGHTFUL STORYTELLING
             - The input notes are just a SEED. You MUST grow them into a full post.
@@ -116,7 +116,7 @@ export default async function handler(request, response) {
         const isHeadline = field === 'headline';
         
         userPrompt = isHeadline 
-          ? `Generate a NEW, different personal headline based on these notes.
+          ? `Generate a headline that feels like a 'Stop Sign'. Use a strong verb or a stark contrast. No generic business advice. Make it feel personal and immediate.
              Style constraint: ${angle}. Max 7 words. 
              Context: ${rawInput}
              Return JSON: { "text": "..." }`
