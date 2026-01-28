@@ -66,7 +66,7 @@ export const MobileHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClick
 // --- Desktop Header ---
 export const DesktopHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClick }) => {
   return (
-    <div className="w-full border-b border-black/[0.08] justify-center py-4 z-20 sticky top-0 flex bg-white/80 backdrop-blur-md transition-all relative">
+    <div className="w-full border-b border-black/[0.08] justify-center py-8 z-20 sticky top-0 flex bg-white/80 backdrop-blur-md transition-all relative">
         
         {/* Логотип */}
         <div 
