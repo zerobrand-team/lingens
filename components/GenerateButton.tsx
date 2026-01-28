@@ -45,7 +45,7 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({
 
   // ВАРИАНТ 1: Кредитов 0
   if (credits === 0) {
-    // Сценарий А: Предлагаем бонус +10 (Опрос)
+    // Сценарий А
     if (!hasClaimedBonus) {
       return (
         <button 
@@ -57,21 +57,18 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({
       );
     }
 
-    // Сценарий Б: Бонус уже потрачен (Финал)
+    // Сценарий Б
     return (
       <button 
         onClick={handleClick}
         className={`relative overflow-hidden w-full h-full rounded-[14px] font-bold text-sm transition-all flex items-center justify-center tracking-tight shadow-md bg-black text-white hover:bg-gray-800 active:scale-95 ${className}`}
       >
-        <span>Unlock Unlimited</span>
-        <svg className="w-4 h-4 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-        </svg>
+        <span>Unlock Unlimited</span> 
       </button>
     );
   }
 
-  // ВАРИАНТ 2: Обычная кнопка (Есть кредиты)
+  // ВАРИАНТ 2: Обычная кнопка
   return (
     <button 
       onClick={handleClick}
