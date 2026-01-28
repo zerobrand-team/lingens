@@ -127,7 +127,7 @@ export default async function handler(request, response) {
     }
 
     const model = genAI.getGenerativeModel({ 
-        model: "gemma-3-27b-it-exp", 
+        model: "gemma-3-27b", 
         systemInstruction: SYSTEM_INSTRUCTION 
     });
 
