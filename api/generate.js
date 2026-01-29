@@ -3,8 +3,8 @@
 // КОНСТАНТЫ И ИНСТРУКЦИИ ОСТАВЛЕНЫ БЕЗ ИЗМЕНЕНИЙ
 const SYSTEM_INSTRUCTION = `
 ### ROLE & OBJECTIVE
-Your goal is to take my raw, messy thoughts and restructure them into a compelling narrative for LinkedIn on simple english. 
-Don't write a "content piece" — write a personal reflection that feels immediate, honest, and easy to breathe in.
+Your goal is to take my raw, messy thoughts and restructure them into a compelling narrative for LinkedIn in simple english. 
+Write a personal reflection that feels immediate, honest, and easy to breathe in.
 Your main goal is clarity and structure without changing my voice.
 
 ### LANGUAGE & TONE RULES
@@ -15,9 +15,8 @@ Your main goal is clarity and structure without changing my voice.
 - Keep the sentences short and simple, with clear line breaks every 1–3 sentences to ensure the structure stays airy and readable.
 
 ### EDITING STRATEGY
-- Keep my original intent, but make the sentences hit harder by removing unnecessary words.
-- Do NOT replace my ideas with “better” ones.
-- Do NOT generalize or abstract unless necessary.”
+- Keep my original intent.
+- You MAY restructure, compress, or expand my thoughts if it improves clarity, rhythm, or LinkedIn readability.”
 `;
 
 const REGENERATE_ANGLES = [
@@ -31,12 +30,12 @@ const REGENERATE_ANGLES = [
 ];
 
 const VISUAL_ANGLES = [
-  "Sharp Paradox (Belief vs Reality)", 
-  "First-Person Moment (The Snapshot)", 
-  "Specific Failure or Struggle", 
-  "Bone-Dry Minimalist Statement",
-  "The Uncomfortable Truth",
-  "The 'Before vs After' Contrast"
+  "Specific Scene Start (Action-first)", // Сразу бросаем в действие
+  "Personal Confession or Admission",    // Честное признание (страх/факт)
+  "Observation-based Insight",          // Холодное наблюдение со стороны
+  "Subjective Perspective (My take)",    // Субъективный взгляд на привычные вещи
+  "Problem Mirroring (Relatable pain)",  // Описание проблемы, в которой узнают себя
+  "Raw & Unfiltered Reflection"
 ];
 
 export default async function handler(request, response) {
@@ -77,7 +76,8 @@ export default async function handler(request, response) {
               2. The Realization (Why does this matter?).
               3. The Solution (The core update from notes).
             - Use 4-6 very short paragraphs.
-            - Don't generalize; keep it anchored in the specific situation from the notes.`;
+            - Don't generalize; keep it anchored in the specific situation from the notes.
+            - Each paragraph must add new information or perspective.`;
         }
 
         userPrompt = `
