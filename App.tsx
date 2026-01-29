@@ -135,8 +135,13 @@ const App: React.FC = () => {
   // 2. Старт с лендинга
   const handleStartApp = () => {
     setShowLanding(false);
-    // Можно показывать модалку только один раз, если нужно, но пока оставим как ты хотела
-    // setShowHowItWorks(true); 
+    
+    const hasSeen = sessionStorage.getItem('has_seen_tutorial_v1');
+
+    if (!hasSeen) {
+      setShowHowItWorks(true);
+      sessionStorage.setItem('has_seen_tutorial_v1', 'true');
+    }
   };
 
   const saveToHistory = (post: string, visuals: VisualState, template: TemplateStyle) => {
