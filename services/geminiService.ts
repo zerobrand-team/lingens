@@ -17,33 +17,32 @@ const callApi = async (payload: any) => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || 'Server error');
+      throw new Error(data.error || `Server error: ${response.status}`);
     }
     
     return data;
   } catch (error) {
-    console.error("API Request Failed:", error); // Теперь в консоли будет видно реальную причину
-    return null; 
+    console.error("API Request Failed:", error);
+    throw error; 
   }
 };
 
 export const generateLinkedInPost = async (rawInput: string, length: PostLength = 'Thoughtful'): Promise<GeneratedContent> => {
-  const data = await callApi({ 
+  return await callApi({ 
     action: 'generatePost', 
     rawInput, 
     length 
   });
-  
-  return data || { postText: "Error", headline: "Error", subHeadline: "Error" };
 };
 
 export const regeneratePostText = async (rawInput: string, currentPost: string, length: PostLength): Promise<string> => {
+  
   const data = await callApi({ 
     action: 'regenerateText', 
-    rawInput, 
+    rawInput: rawInput,
     length 
   });
-  return data?.postText || currentPost;
+  return data.postText;
 };
 
 export const regenerateVisualField = async (rawInput: string, field: 'headline' | 'subHeadline'): Promise<string> => {
@@ -52,5 +51,6 @@ export const regenerateVisualField = async (rawInput: string, field: 'headline' 
     rawInput, 
     field 
   });
-  return data?.text || "Try again";
+  
+  return data.text || data.headline || data.subHeadline || "Try again";
 };
