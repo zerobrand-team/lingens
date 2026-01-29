@@ -125,7 +125,7 @@ const App: React.FC = () => {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
     }
-  }, [generatedPost]);
+  }, [generatedPost, mobileTab]);
 
   // --- NAVIGATION ---
   const handleLogoClick = () => {
@@ -321,9 +321,10 @@ const App: React.FC = () => {
         <div className={`px-4 pb-20 ${!generatedPost ? 'pt-10' : 'pt-6'}`}>
           
         {/* TAB: TEXT */}
-          {(mobileTab === 'text' || !generatedPost) && (
-            <div className="animate-in fade-in duration-300 space-y-4">
-                <div className="bg-white rounded-[32px] shadow-sm p-6 flex flex-col relative overflow-hidden">
+            <div className={`animate-in fade-in duration-300 space-y-4 ${
+              (mobileTab !== 'text' && generatedPost) ? 'hidden' : 'block'
+            }`}>
+              <div className="bg-white rounded-[32px] shadow-sm p-6 flex flex-col relative overflow-hidden">
                     
                     {/* ЗАГОЛОВОК + КНОПКИ */}
                     <div className="flex justify-between items-center pb-4 mb-2 border-b border-gray-200">
@@ -507,7 +508,6 @@ const App: React.FC = () => {
                     )}
                 </div>
             </div>
-          )}
 
           {/* TAB: IMAGE */}
           {generatedPost && mobileTab === 'image' && (
