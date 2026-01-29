@@ -4,8 +4,10 @@ interface CreditContextType {
   credits: number;
   spendCredit: () => boolean;
   addCredits: (amount: number) => void;
+  
   hasClaimedBonus: boolean;
   claimBonus: () => void;
+  
   isFeedbackModalOpen: boolean;
   openFeedbackModal: () => void;
   closeFeedbackModal: () => void;
@@ -20,20 +22,22 @@ interface CreditContextType {
 const CreditContext = createContext<CreditContextType | undefined>(undefined);
 
 export const CreditProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // 1. Кредиты из кэша
   const [credits, setCredits] = useState<number>(() => {
     const saved = localStorage.getItem('user_credits');
     return saved !== null ? parseInt(saved, 10) : 10;
   });
 
+  // 2. Статус бонуса из кэша
   const [hasClaimedBonus, setHasClaimedBonus] = useState<boolean>(() => {
     return localStorage.getItem('user_bonus_claimed') === 'true';
   });
-  // -----------------------
 
   const [isFeedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [isSecretModalOpen, setSecretModalOpen] = useState(false);
   const [isLimitModalOpen, setLimitModalOpen] = useState(false);
 
+  // Сохраняем состояния при изменениях
   useEffect(() => {
     localStorage.setItem('user_credits', credits.toString());
   }, [credits]);
@@ -54,12 +58,22 @@ export const CreditProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setCredits((prev) => prev + amount);
   };
 
-  // --- НОВАЯ ФУНКЦИЯ ---
+  // --- ЛОГИКА ПОЛУЧЕНИЯ БОНУСА ---
   const claimBonus = () => {
-    addCredits(20);            // Даем 20 кредитов
-    setHasClaimedBonus(true);  // Ставим галочку "Бонус получен"
+    // Если уже забирали — показываем лимиты
+    if (hasClaimedBonus) {
+        setLimitModalOpen(true); // Открываем модалку
+        return;
+    }
+
+    // Если нет — даем кредиты и запоминаем
+    addCredits(20);
+    setHasClaimedBonus(true);
+    
+    // Опционально: закрыть модалку, где была кнопка бонуса
+    // setFeedbackModalOpen(false); 
   };
-  // ---------------------
+  // -------------------------------
 
   return (
     <CreditContext.Provider value={{ 
@@ -67,7 +81,6 @@ export const CreditProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       spendCredit, 
       addCredits,
       
-      // Передаем новые значения
       hasClaimedBonus,
       claimBonus,
 
