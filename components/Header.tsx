@@ -43,22 +43,6 @@ export const MobileHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClick
             </div>
             <CreditControls />
         </div>
-
-        {/* Шаги (Step 1 / Step 2) */}
-        {!generatedPost && (
-          <div className="w-full pt-5 flex justify-center z-20 animate-in fade-in slide-in-from-top-2 duration-500 delay-100">
-            <div className="flex items-start gap-3 select-none">
-                <div className="flex flex-col items-center gap-2">
-                    <div className="h-[3px] rounded-full bg-black w-24"></div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-black">Step 1: Text</span>
-                </div>
-                <div className="flex flex-col items-center gap-2 opacity-30">
-                    <div className="h-[3px] rounded-full bg-black w-24"></div>
-                    <span className="text-[10px] font-bold uppercase text-black">Step 2: Image</span>
-                </div>
-            </div>
-          </div>
-        )}
     </>
   );
 };
