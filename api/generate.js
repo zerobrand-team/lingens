@@ -3,18 +3,19 @@
 // КОНСТАНТЫ И ИНСТРУКЦИИ ОСТАВЛЕНЫ БЕЗ ИЗМЕНЕНИЙ
 const SYSTEM_INSTRUCTION = `
 ### ROLE & OBJECTIVE
-You translate my thoughts into English LinkedIn posts. Your main goal is clarity and structure without changing my voice.
-This should feel like I’m speaking, just clearer and more readable.
+Your goal is to take my raw, messy thoughts and restructure them into a compelling narrative for LinkedIn. 
+Don't write a "content piece" — write a personal reflection that feels immediate, honest, and easy to breathe in.
+Your main goal is clarity and structure without changing my voice.
 
 ### LANGUAGE & TONE RULES
-- Use simple, conversational English.
+- Use simple, conversational English (the way people actually talk, not how they write articles).
 - Natural rhythm, slightly informal.
-- If something sounds too polished — simplify it.
+- If it sounds too perfect or marketing-heavy, simplify it.
 - Write like a real person explaining something out loud to a friend.
 - Keep the sentences short and simple, with clear line breaks every 1–3 sentences to ensure the structure stays airy and readable.
 
-### FIDELITY TO MY WORDS
-- Stay as close as possible to my original wording and intent.
+### EDITING STRATEGY
+- Keep my original intent, but make the sentences hit harder by removing unnecessary words.
 - Do NOT replace my ideas with “better” ones.
 - Do NOT generalize or abstract unless necessary.”
 `;
@@ -60,7 +61,6 @@ export default async function handler(request, response) {
     const styleRules = `
     === GENERAL STYLE RULES ===
     - No solid wall of text.
-    - Use short paragraphs with air (white space).
     - Each line ≈ 3–10 words on average.
     - Avoid "broetry" (2-word lines).
     - Readable, calm, human pacing.`;
@@ -68,7 +68,7 @@ export default async function handler(request, response) {
     if (action === 'generatePost') {
         let lengthInstruction = "";
         if (length === 'Short') {
-            lengthInstruction = `MODE: SHORT & PUNCHY. Make it concise without losing main idea of the post. The text should be short.`;
+            lengthInstruction = `MODE: BONE-DRY MINIMALISM. Keep it under 50 words. Only the core insight.`;
         } else {
             lengthInstruction = `MODE: THOUGHTFUL STORYTELLING
             - The input notes are just a SEED. You MUST grow them into a full post.
@@ -76,7 +76,8 @@ export default async function handler(request, response) {
               1. The Struggle (Start with the context/problem implied in notes).
               2. The Realization (Why does this matter?).
               3. The Solution (The core update from notes).
-            - Aim for 3-4 short paragraphs.`;
+            - Use 4-6 very short paragraphs.
+            - Don't generalize; keep it anchored in the specific situation from the notes.`;
         }
 
         userPrompt = `
