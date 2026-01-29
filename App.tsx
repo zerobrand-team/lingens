@@ -614,7 +614,7 @@ const App: React.FC = () => {
                             <div className="animate-in slide-in-from-top-2 fade-in duration-200">
                                 <div className="bg-[#F5F7F9] rounded-[24px] p-6 mb-4 border border-transparent focus-within:bg-white focus-within:border-gray-200 transition-all">
                                     <textarea 
-                                        className="w-full h-32 bg-transparent border-none resize-none focus:ring-0 outline-none text-base font-medium placeholder:text-gray-400"
+                                        className="w-full h-32 bg-transparent border-none resize-none focus:ring-0 outline-none text-[15px] font-medium placeholder:text-gray-400"
                                         placeholder="Messy thoughts are fine. Nobody will see this."
                                         value={rawInput}
                                         onChange={(e) => setRawInput(e.target.value)}
