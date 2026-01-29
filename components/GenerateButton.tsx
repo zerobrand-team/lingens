@@ -92,7 +92,7 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({
       
       <span className="relative z-10 flex items-center gap-1.5 text-[#111] tracking-tight">
          {isGenerating ? (
-            'Working hard...' 
+            'Generating...' 
          ) : (
             <>
               Generate
