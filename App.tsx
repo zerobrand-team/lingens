@@ -78,6 +78,35 @@ const App: React.FC = () => {
   const generatedSectionRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const handleTemplateSelect = (tId: TemplateStyle) => {
+    setSelectedTemplate(tId);
+    setViewMode('editor');
+
+    setVisualData(prev => {
+      const isMinimal = tId === TemplateStyle.MINIMAL_TYPOGRAPHY;
+
+      let newData = {
+        ...prev,
+        headlineSettings: {
+          ...prev.headlineSettings,
+          textAlign: (isMinimal ? 'left' : 'center') as 'left' | 'center' | 'right'
+        }
+      };
+
+      if (isMinimal) {
+        newData.backgroundImage = null;
+        newData.backgroundColor = null;
+      } else {
+        // Если выбрали другой шаблон и фона нет -> ВОЗВРАЩАЕМ картинку из констант
+        if (!prev.backgroundImage && !prev.backgroundColor) {
+          newData.backgroundImage = DEFAULT_VISUAL_STATE.backgroundImage;
+        }
+      }
+
+      return newData;
+    });
+  };
+
   // --- LOGIC ---
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -489,17 +518,7 @@ const App: React.FC = () => {
                         ].map((t) => (
                           <button 
                               key={t.id} 
-                              onClick={() => { 
-                                  setSelectedTemplate(t.id); 
-                                  setViewMode('editor');
-                                  setVisualData(prev => ({
-                                      ...prev,
-                                      headlineSettings: {
-                                          ...prev.headlineSettings,
-                                          textAlign: t.id === TemplateStyle.MINIMAL_TYPOGRAPHY ? 'left' : 'center'
-                                      }
-                                  }));
-                              }} 
+                              onClick={() => handleTemplateSelect(t.id)}
                               className="group text-left w-full flex flex-col gap-3"
                           >
                               <div className="w-full aspect-[4/5] rounded-[24px] overflow-hidden shadow-sm group-hover:shadow-xl transition-all ring-1 ring-black/5 bg-gray-100 relative">
@@ -786,17 +805,7 @@ const App: React.FC = () => {
                                     ].map((t) => (
                                       <button 
                                           key={t.id} 
-                                          onClick={() => { 
-                                              setSelectedTemplate(t.id); 
-                                              setViewMode('editor');
-                                              setVisualData(prev => ({
-                                                  ...prev,
-                                                  headlineSettings: {
-                                                      ...prev.headlineSettings,
-                                                      textAlign: t.id === TemplateStyle.MINIMAL_TYPOGRAPHY ? 'left' : 'center'
-                                                  }
-                                              }));
-                                          }} 
+                                          onClick={() => handleTemplateSelect(t.id)}
                                           className="group text-center w-[160px] flex flex-col gap-3"
                                       >
                                           <div className="w-full aspect-[4/5] rounded-[24px] overflow-hidden shadow-sm group-hover:shadow-xl transition-all group-hover:-translate-y-1 ring-1 ring-black/5 bg-gray-100 relative">
