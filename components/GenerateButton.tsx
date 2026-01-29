@@ -74,7 +74,7 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({
       onClick={handleClick}
       disabled={disabled || isGenerating}
       className={`
-        relative overflow-hidden w-full h-full rounded-[14px] font-bold text-[13px] transition-all flex items-center justify-center tracking-tight
+        relative overflow-hidden w-full h-full rounded-[14px] font-bold text-sm transition-all flex items-center justify-center tracking-tight
         border border-transparent bg-no-repeat bg-cover bg-center bg-origin-border
         ${isGenerating ? 'bg-[#E5E5EA] cursor-default' : figmaGradient}
         ${(disabled && !isGenerating) ? ' cursor-not-allowed' : ''}
