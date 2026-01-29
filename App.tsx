@@ -49,7 +49,7 @@ const App: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [isRegeneratingText, setIsRegeneratingText] = useState<boolean>(false);
   const [regeneratingFields, setRegeneratingFields] = useState({headline: false, subHeadline: false});
-  const [generatedPost, setGeneratedPost] = useState<string>('нунун');
+  const [generatedPost, setGeneratedPost] = useState<string>('');
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState(false);
