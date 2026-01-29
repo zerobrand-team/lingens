@@ -13,6 +13,7 @@ import { useCredits } from './context/CreditContext';
 import { GenerateButton } from './components/GenerateButton'; 
 import { FeedbackModal } from './components/modals/FeedbackModal';
 import { LimitModal } from './components/modals/LimitModal';
+import { Analytics } from '@vercel/analytics/react';
 
 const tplMinimal = "/templates/minimal.png";
 const tplBottom = "/templates/bottom.png";
@@ -919,6 +920,7 @@ const App: React.FC = () => {
 
       <FeedbackModal />
       <LimitModal />
+      <Analytics />
 
     </>
   );
