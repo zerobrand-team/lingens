@@ -3,7 +3,7 @@
 // КОНСТАНТЫ И ИНСТРУКЦИИ ОСТАВЛЕНЫ БЕЗ ИЗМЕНЕНИЙ
 const SYSTEM_INSTRUCTION = `
 ### ROLE & OBJECTIVE
-Your goal is to take my raw, messy thoughts and restructure them into a compelling narrative for LinkedIn. 
+Your goal is to take my raw, messy thoughts and restructure them into a compelling narrative for LinkedIn on simple english. 
 Don't write a "content piece" — write a personal reflection that feels immediate, honest, and easy to breathe in.
 Your main goal is clarity and structure without changing my voice.
 
