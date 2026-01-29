@@ -51,7 +51,7 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onClose }) => {
         <div className="flex flex-col md:flex-row items-stretch gap-1 md:gap-1 relative">
           
           {/* --- STEP 1 --- */}
-          <div className="item-anim delay-1 flex-1 bg-white rounded-[24px] border border-white/50 shadow-[0px_8px_16px_rgba(0,0,0,0.04)] relative overflow-hidden min-h-[180px] p-2 md:p-6 flex flex-col justify-between group">
+          <div className="item-anim delay-1 flex-1 bg-white rounded-[24px] border border-white/50 shadow-[0px_8px_16px_rgba(0,0,0,0.04)] relative overflow-hidden min-h-[120px] md:min-h-[180px] p-6 flex flex-col justify-between group">
              
              {/* Header */}
              <div className="flex justify-between items-start relative z-10">
@@ -73,7 +73,7 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onClose }) => {
           </div>
 
           {/* --- STEP 2 --- */}
-          <div className="item-anim delay-2 flex-1 bg-white rounded-[24px] border border-white/50 shadow-[0px_8px_16px_rgba(0,0,0,0.04)] relative overflow-hidden min-h-[180px] p-2 md:p-6 flex flex-col justify-between group">
+          <div className="item-anim delay-2 flex-1 bg-white rounded-[24px] border border-white/50 shadow-[0px_8px_16px_rgba(0,0,0,0.04)] relative overflow-hidden min-h-[120px] md:min-h-[180px] p-6 flex flex-col justify-between group">
 
              <div className="flex justify-between items-start relative z-10">
                 <span className="text-[12px] font-bold text-gray-400 uppercase tracking-widest">Step 2</span>
@@ -92,7 +92,7 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onClose }) => {
           </div>
 
           {/* --- STEP 3 --- */}
-          <div className="item-anim delay-3 flex-1 bg-white rounded-[24px] border border-white/50 shadow-[0px_8px_16px_rgba(0,0,0,0.04)] relative overflow-hidden min-h-[180px] p-2 md:p-6 flex flex-col justify-between group">
+          <div className="item-anim delay-3 flex-1 bg-white rounded-[24px] border border-white/50 shadow-[0px_8px_16px_rgba(0,0,0,0.04)] relative overflow-hidden min-h-[120px] md:min-h-[180px] p-6 flex flex-col justify-between group">
 
              <div className="flex justify-between items-start relative z-10">
                 <span className="text-[12px] font-bold text-gray-400 uppercase tracking-widest">Step 3</span>
