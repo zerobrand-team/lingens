@@ -39,14 +39,14 @@ export const MobileHeader: React.FC<HeaderProps> = ({ generatedPost, onLogoClick
         <div className="w-full flex justify-between items-center px-5 py-4 z-20 sticky top-0 backdrop-blur-sm border-b border-black/[0.05]">
             {/* ДОБАВИЛИ КЛИК НА ЛОГОТИП */}
             <div onClick={onLogoClick} className="cursor-pointer active:opacity-70 transition-opacity">
-                <img src="/Lingens.svg" alt="Logo" className="h-4 w-auto" />
+                <img src="/Lingens.svg" alt="Logo" className="h-6 w-auto" />
             </div>
             <CreditControls />
         </div>
 
         {/* Шаги (Step 1 / Step 2) */}
         {!generatedPost && (
-          <div className="w-full pt-2 flex justify-center z-20 animate-in fade-in slide-in-from-top-2 duration-500 delay-100">
+          <div className="w-full pt-5 flex justify-center z-20 animate-in fade-in slide-in-from-top-2 duration-500 delay-100">
             <div className="flex items-start gap-3 select-none">
                 <div className="flex flex-col items-center gap-2">
                     <div className="h-[3px] rounded-full bg-black w-24"></div>
