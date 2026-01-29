@@ -1,5 +1,6 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+// api/generate.js
 
+// КОНСТАНТЫ И ИНСТРУКЦИИ ОСТАВЛЕНЫ БЕЗ ИЗМЕНЕНИЙ
 const SYSTEM_INSTRUCTION = `
 ### ROLE & OBJECTIVE
 You translate my thoughts into English LinkedIn posts. Your main goal is clarity and structure without changing my voice.
@@ -38,6 +39,7 @@ const VISUAL_ANGLES = [
 ];
 
 export default async function handler(request, response) {
+  // Заголовки CORS
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -46,15 +48,15 @@ export default async function handler(request, response) {
   if (request.method !== 'POST') return response.status(405).json({ error: 'Method Not Allowed' });
 
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
+    // 1. ИЗМЕНЕНИЕ: Берем ключ OpenRouter (без VITE_)
+    const apiKey = process.env.OPENROUTER_API_KEY;
     if (!apiKey) return response.status(500).json({ error: "API Key missing" });
 
-    const genAI = new GoogleGenerativeAI(apiKey);
     const { action, rawInput, length, field } = request.body;
 
     let userPrompt = "";
     
-    // Общие правила оформления
+    // ЛОГИКА ПРОМПТОВ ОСТАВЛЕНА БЕЗ ИЗМЕНЕНИЙ
     const styleRules = `
     === GENERAL STYLE RULES ===
     - No solid wall of text.
@@ -126,14 +128,36 @@ export default async function handler(request, response) {
              Return JSON: { "text": "..." }`;
     }
 
-    const model = genAI.getGenerativeModel({ 
-        model: "gemma-3-27b", 
-        systemInstruction: SYSTEM_INSTRUCTION 
+    // 2. ИЗМЕНЕНИЕ: Запрос к OpenRouter через fetch (вместо Google SDK)
+    const openRouterResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "HTTP-Referer": "https://lingens.vercel.app", // Ваш домен
+        "X-Title": "Lingens",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        // Используем бесплатную модель Gemini Flash
+        model: "google/gemini-2.0-flash-exp:free", 
+        messages: [
+          { role: "system", content: SYSTEM_INSTRUCTION }, // Ваши системные инструкции
+          { role: "user", content: userPrompt }            // Ваш промпт
+        ],
+        temperature: 0.7,
+        response_format: { type: "json_object" } // Просим вернуть JSON
+      })
     });
 
-    const result = await model.generateContent(userPrompt);
-    const text = result.response.text();
+    if (!openRouterResponse.ok) {
+        const errorData = await openRouterResponse.text();
+        throw new Error(`OpenRouter API Error: ${openRouterResponse.status} - ${errorData}`);
+    }
+
+    const data = await openRouterResponse.json();
+    const text = data.choices[0].message.content;
     
+    // Очистка JSON (как у вас и было)
     const cleanJsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
     try {
@@ -141,6 +165,7 @@ export default async function handler(request, response) {
         return response.status(200).json(jsonResponse);
     } catch (e) {
         console.error("JSON Parse Error:", e);
+        // Fallback если JSON сломался
         return response.status(200).json({ 
             postText: cleanJsonText, 
             headline: "New Post", 
