@@ -143,8 +143,7 @@ export default async function handler(request, response) {
           { role: "system", content: SYSTEM_INSTRUCTION }, // Ваши системные инструкции
           { role: "user", content: userPrompt }            // Ваш промпт
         ],
-        temperature: 0.7,
-        response_format: { type: "json_object" } // Просим вернуть JSON
+        temperature: 0.7
       })
     });
 
