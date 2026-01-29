@@ -138,7 +138,7 @@ export default async function handler(request, response) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "meta-llama/llama-3.3-70b-instruct:free", 
+        model: "google/gemini-2.0-flash-lite-001", 
         messages: [
           { role: "system", content: SYSTEM_INSTRUCTION }, // Ваши системные инструкции
           { role: "user", content: userPrompt }            // Ваш промпт
