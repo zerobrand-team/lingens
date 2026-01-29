@@ -51,7 +51,7 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onClose }) => {
         <div className="flex flex-col md:flex-row items-stretch gap-1 md:gap-1 relative">
           
           {/* --- STEP 1 --- */}
-          <div className="item-anim delay-1 flex-1 bg-white rounded-[24px] border border-white/50 shadow-[0px_8px_16px_rgba(0,0,0,0.04)] relative overflow-hidden min-h-[120px] md:min-h-[180px] p-6 flex flex-col justify-between group">
+          <div className="item-anim delay-1 flex-1 bg-white rounded-[24px] border border-white/50 shadow-[0px_8px_16px_rgba(0,0,0,0.04)] relative overflow-hidden min-h-[100px] md:min-h-[180px] p-6 flex flex-col justify-between group">
              
              {/* Header */}
              <div className="flex justify-between items-start relative z-10">
@@ -65,15 +65,14 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onClose }) => {
              {/* Content */}
              <div className="relative z-10 mt-4">
                 <h3 className="text-[17px] leading-[1.3] text-black mb-1">
-                    <span className="font-semibold block">Dump whatever is</span> 
-                    in your head
+                    <span className="font-semibold block">Dump whatever</span> 
+                    is in your head
                 </h3>
-                <p className="text-[14px] text-gray-500 font-medium">voice, bullets, half-thoughts</p>
              </div>
           </div>
 
           {/* --- STEP 2 --- */}
-          <div className="item-anim delay-2 flex-1 bg-white rounded-[24px] border border-white/50 shadow-[0px_8px_16px_rgba(0,0,0,0.04)] relative overflow-hidden min-h-[120px] md:min-h-[180px] p-6 flex flex-col justify-between group">
+          <div className="item-anim delay-2 flex-1 bg-white rounded-[24px] border border-white/50 shadow-[0px_8px_16px_rgba(0,0,0,0.04)] relative overflow-hidden min-h-[100px] md:min-h-[180px] p-6 flex flex-col justify-between group">
 
              <div className="flex justify-between items-start relative z-10">
                 <span className="text-[12px] font-bold text-gray-400 uppercase tracking-widest">Step 2</span>
@@ -87,12 +86,11 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onClose }) => {
                     <span className="font-semibold block">We clean it up</span> 
                     without changing voice
                 </h3>
-                <p className="text-[14px] text-gray-500 font-medium">It feels like you.</p>
              </div>
           </div>
 
           {/* --- STEP 3 --- */}
-          <div className="item-anim delay-3 flex-1 bg-white rounded-[24px] border border-white/50 shadow-[0px_8px_16px_rgba(0,0,0,0.04)] relative overflow-hidden min-h-[120px] md:min-h-[180px] p-6 flex flex-col justify-between group">
+          <div className="item-anim delay-3 flex-1 bg-white rounded-[24px] border border-white/50 shadow-[0px_8px_16px_rgba(0,0,0,0.04)] relative overflow-hidden min-h-[100px] md:min-h-[180px] p-6 flex flex-col justify-between group">
 
              <div className="flex justify-between items-start relative z-10">
                 <span className="text-[12px] font-bold text-gray-400 uppercase tracking-widest">Step 3</span>
@@ -106,7 +104,6 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onClose }) => {
                     <span className="font-semibold block">Post it.</span> 
                     Or tweak it and post it.
                 </h3>
-                <p className="text-[14px] text-gray-500 font-medium">Ready to go.</p>
              </div>
           </div>
 
