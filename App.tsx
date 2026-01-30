@@ -378,11 +378,24 @@ const App: React.FC = () => {
                                 <div className="bg-[#F5F7F9] rounded-[24px] p-4 mb-4 border border-transparent focus-within:bg-white focus-within:border-gray-200 transition-all">
                                     <textarea 
                                         className="w-full h-32 bg-transparent border-none resize-none focus:ring-0 outline-none text-base placeholder:text-gray-400 leading-relaxed font-medium"
-                                        placeholder="Messy thoughts are fine. Nobody will see this."
+                                        placeholder="e.g. i don't know how to share my journey building a startup on linkedin"
                                         value={rawInput}
                                         onChange={(e) => setRawInput(e.target.value)}
                                     />
-                                </div>
+                                    <div className="flex justify-end mt-1">
+                                      <span
+                                        onClick={() => {
+                                          const sampleText = "I’m building a startup and constantly learning things the hard way.\nI want to share this on LinkedIn, but every time it sounds awkward or forced.\nNot sure how to turn these thoughts into a personal post.";
+                                          setRawInput(sampleText);
+                                          setTimeout(() => {
+                                            handleGenerate();
+                                          }, 0);
+                                        }}
+                                        className="text-[12px] text-gray-400 underline cursor-pointer hover:text-black transition-all"
+                                      >
+                                        Start with sample
+                                      </span>
+                                    </div>
                                 
                                 <div className="flex items-start justify-between w-full mt-4">
                                     <div className="flex-shrink-0 ">
@@ -640,10 +653,24 @@ const App: React.FC = () => {
                                 <div className="bg-[#F5F7F9] rounded-[24px] p-6 mb-4 border border-transparent focus-within:bg-white focus-within:border-gray-200 transition-all">
                                     <textarea 
                                         className="w-full h-32 bg-transparent border-none resize-none focus:ring-0 outline-none text-[15px] font-medium placeholder:text-gray-400"
-                                        placeholder="Messy thoughts are fine. Nobody will see this."
+                                        placeholder="e.g. i don't know how to share my journey building a startup on linkedin"
                                         value={rawInput}
                                         onChange={(e) => setRawInput(e.target.value)}
                                     />
+                                    <div className="flex justify-end mt-1">
+                                      <span
+                                        onClick={() => {
+                                          const sampleText = "I’m building a startup and constantly learning things the hard way.\nI want to share this on LinkedIn, but every time it sounds awkward or forced.\nNot sure how to turn these thoughts into a personal post.";
+                                          setRawInput(sampleText);
+                                          setTimeout(() => {
+                                            handleGenerate();
+                                          }, 0);
+                                        }}
+                                        className="text-[12px] text-gray-400 underline cursor-pointer hover:text-black transition-all"
+                                      >
+                                        Start with sample
+                                      </span>
+                                    </div>
                                 </div>
                                 
                                 <div className="flex items-start justify-between w-full mt-4">
