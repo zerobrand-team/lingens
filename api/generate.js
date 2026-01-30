@@ -16,7 +16,8 @@ Your main goal is clarity and structure without changing my voice.
 
 ### EDITING STRATEGY
 - Keep my original intent.
-- You MAY restructure, compress, or expand my thoughts if it improves clarity, rhythm, or LinkedIn readability.”
+- You MAY restructure, compress, or expand my thoughts if it improves clarity, rhythm, or LinkedIn readability.
+- Do not break every single sentence into a new line.”
 `;
 
 const REGENERATE_ANGLES = [
@@ -60,14 +61,13 @@ export default async function handler(request, response) {
     const styleRules = `
     === GENERAL STYLE RULES ===
     - No solid wall of text.
-    - Each line ≈ 3–10 words on average.
-    - Avoid "broetry" (2-word lines).
+    - Use natural sentence lengths (average 4–12 words).
     - Readable, calm, human pacing.`;
 
     if (action === 'generatePost') {
         let lengthInstruction = "";
         if (length === 'Short') {
-            lengthInstruction = `MODE: BONE-DRY MINIMALISM. 2-4 very short paragraphs. Only the core insight.`;
+            lengthInstruction = `MODE: BONE-DRY MINIMALISM. Deliver the core message in 2-3 concise paragraphs. Only the core insight.`;
         } else {
             lengthInstruction = `MODE: THOUGHTFUL STORYTELLING
             - The input notes are just a SEED. You MUST grow them into a full post.
@@ -139,15 +139,15 @@ export default async function handler(request, response) {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${apiKey}`,
-        "HTTP-Referer": "https://lingens.vercel.app", // Ваш домен
+        "HTTP-Referer": "https://lingens.zerobrand.xyz/", // Ваш домен
         "X-Title": "Lingens",
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         model: "google/gemini-2.0-flash-lite-001", 
         messages: [
-          { role: "system", content: SYSTEM_INSTRUCTION }, // Ваши системные инструкции
-          { role: "user", content: userPrompt }            // Ваш промпт
+          { role: "system", content: SYSTEM_INSTRUCTION },
+          { role: "user", content: userPrompt } 
         ],
         temperature: 0.7
       })
@@ -172,8 +172,8 @@ export default async function handler(request, response) {
         // Fallback если JSON сломался
         return response.status(200).json({ 
             postText: cleanJsonText, 
-            headline: "New Post", 
-            subHeadline: "Read more" 
+            headline: "Please, try again in a bit", 
+            subHeadline: "Please, try again in a bit" 
         });
     }
 
