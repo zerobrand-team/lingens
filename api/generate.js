@@ -30,12 +30,12 @@ const REGENERATE_ANGLES = [
 ];
 
 const VISUAL_ANGLES = [
-  "Specific Scene Start (Action-first)", // Сразу бросаем в действие
-  "Personal Confession or Admission",    // Честное признание (страх/факт)
-  "Observation-based Insight",          // Холодное наблюдение со стороны
-  "Subjective Perspective (My take)",    // Субъективный взгляд на привычные вещи
-  "Problem Mirroring (Relatable pain)",  // Описание проблемы, в которой узнают себя
-  "Raw & Unfiltered Reflection"
+  "Action-First: Start with the core result or a decisive move. Use a strong verb.", 
+  "The Confession: Reveal a personal struggle, mistake, or 'behind-the-scenes' truth.", 
+  "The Cold Observer: Present the most impactful data point or fact as an objective reality.", 
+  "Contrarian Take: Lead with the part of the text that challenges common beliefs.", 
+  "The Mirror: Focus on the specific symptom of the problem the reader is facing.", 
+  "The Specific Gain: Lead with the exact number, time saved, or profit mentioned."
 ];
 
 export default async function handler(request, response) {
@@ -119,10 +119,15 @@ export default async function handler(request, response) {
         const isHeadline = field === 'headline';
         
         userPrompt = isHeadline 
-          ? `Generate a punchy, one-sentence "Stop Sign" headline. Use a strong verb or a stark contrast. No generic business advice. Write it as if it's a text message to a friend. Make it feel personal and immediate.
-             Style constraint: ${angle}. Max 7 words. NO colons (":") or dashes ("-").
-             Context: ${rawInput}
-             Return JSON: { "text": "..." }`
+          ? `Analyze the Context and find the "Anchor Detail" (the strongest number, specific insight, or bold statement). Then, wrap it into a headline using the ${angle} style.
+             PRIORITY RULES:
+             1. If there's a NUMBER or a SPECIFIC RESULT in the text, it MUST be the focus of the headline, regardless of the angle.
+             2. NO colons (":") or "Topic: Hook" structures.
+             3. Start directly with the hook. No "How to" or "Why you should".
+             4. Max 7 words.
+
+     Context: ${rawInput}
+     Return JSON: { "text": "..." }`
           : `Generate ONE new subheadline (max 10 words).
              Style constraint: ${angle}. It should explain the idea or add a layer of intrigue.
              Context: ${rawInput}
