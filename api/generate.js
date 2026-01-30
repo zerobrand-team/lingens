@@ -67,7 +67,7 @@ export default async function handler(request, response) {
     if (action === 'generatePost') {
         let lengthInstruction = "";
         if (length === 'Short') {
-            lengthInstruction = `MODE: BONE-DRY MINIMALISM. Keep it under 50 words. Only the core insight.`;
+            lengthInstruction = `MODE: BONE-DRY MINIMALISM. 2-4 very short paragraphs. Only the core insight.`;
         } else {
             lengthInstruction = `MODE: THOUGHTFUL STORYTELLING
             - The input notes are just a SEED. You MUST grow them into a full post.
