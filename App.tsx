@@ -382,21 +382,23 @@ const App: React.FC = () => {
                                         value={rawInput}
                                         onChange={(e) => setRawInput(e.target.value)}
                                     />
-                                    <div className="flex justify-end mt-1">
-                                      <span
-                                        onClick={() => {
-                                          const sampleText = "I’m building a startup and constantly learning things the hard way.\nI want to share this on LinkedIn, but every time it sounds awkward or forced.\nNot sure how to turn these thoughts into a personal post.";
-                                          setRawInput(sampleText);
-                                          setTimeout(() => {
-                                            handleGenerate();
-                                          }, 0);
-                                        }}
-                                        className="text-[12px] text-gray-400 underline cursor-pointer hover:text-black transition-all"
-                                      >
-                                        Start with sample
-                                      </span>
-                                    </div>
-                                </div>
+                                    {!generatedPost && (
+                                      <div className="flex justify-end mt-1">
+                                        <span
+                                          onClick={() => {
+                                            const sampleText = "I’m building a startup and constantly learning things the hard way.\nI want to share this on LinkedIn, but every time it sounds awkward or forced.\nNot sure how to turn these thoughts into a personal post.";
+                                            setRawInput(sampleText);
+                                            setTimeout(() => {
+                                              handleGenerate();
+                                            }, 0);
+                                          }}
+                                          className="text-[12px] text-gray-400 underline cursor-pointer hover:text-black transition-all"
+                                        >
+                                          Start with sample
+                                        </span>
+                                      </div>
+                                    )}
+                                </div>
                                 
                                 <div className="flex items-start justify-between w-full mt-4">
                                     <div className="flex-shrink-0 ">
@@ -658,20 +660,22 @@ const App: React.FC = () => {
                                         value={rawInput}
                                         onChange={(e) => setRawInput(e.target.value)}
                                     />
-                                    <div className="flex justify-end mt-1">
-                                      <span
-                                        onClick={() => {
-                                          const sampleText = "I’m building a startup and constantly learning things the hard way.\nI want to share this on LinkedIn, but every time it sounds awkward or forced.\nNot sure how to turn these thoughts into a personal post.";
-                                          setRawInput(sampleText);
-                                          setTimeout(() => {
-                                            handleGenerate();
-                                          }, 0);
-                                        }}
-                                        className="text-[12px] text-gray-400 underline cursor-pointer hover:text-black transition-all"
-                                      >
-                                        Start with sample
-                                      </span>
-                                    </div>
+                                    {!generatedPost && (
+                                      <div className="flex justify-end mt-1">
+                                        <span
+                                          onClick={() => {
+                                            const sampleText = "I’m building a startup and constantly learning things the hard way.\nI want to share this on LinkedIn, but every time it sounds awkward or forced.\nNot sure how to turn these thoughts into a personal post.";
+                                            setRawInput(sampleText);
+                                            setTimeout(() => {
+                                              handleGenerate();
+                                            }, 0);
+                                          }}
+                                          className="text-[12px] text-gray-400 underline cursor-pointer hover:text-black transition-all"
+                                        >
+                                          Start with sample
+                                        </span>
+                                      </div>
+                                    )}
                                 </div>
                                 
                                 <div className="flex items-start justify-between w-full mt-4">
