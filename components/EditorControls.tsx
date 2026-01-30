@@ -169,6 +169,71 @@ const EditorControls: React.FC<EditorControlsProps> = ({
                     <span>Add background</span>
                 </button>
             )}
+          
+          {/* Настройки картинки: появляются только если есть фоновое изображение */}
+    {visualData.backgroundImage && (
+        <div className="mt-3 bg-gray-50 rounded-xl p-3 border border-gray-100 space-y-3 animate-in fade-in slide-in-from-top-1">
+            
+            {/* 1. Scale (Зум) */}
+            <div className="space-y-1">
+                <div className="flex justify-between items-center">
+                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Scale</span>
+                    <span className="text-xs text-gray-400">{Math.round((visualData.imageScale || 1) * 100)}%</span>
+                </div>
+                <input
+                    type="range"
+                    min="1"
+                    max="3"
+                    step="0.05"
+                    value={visualData.imageScale || 1}
+                    onChange={(e) => setVisualData(prev => ({ 
+                        ...prev, 
+                        imageScale: parseFloat(e.target.value) 
+                    }))}
+                    className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+                />
+            </div>
+
+            {/* 2. Position X / Y (Для точной настройки, если мышкой неудобно) */}
+            <div className="space-y-1">
+                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Position</span>
+                 <div className="flex gap-2">
+                    <div className="flex-1 relative">
+                        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-gray-400 font-bold">X</span>
+                        <input
+                            type="number"
+                            value={Math.round(visualData.imagePosition?.x || 0)}
+                            onChange={(e) => setVisualData(prev => ({
+                                ...prev,
+                                imagePosition: { ...prev.imagePosition, x: Number(e.target.value) }
+                            }))}
+                            className="w-full bg-white border border-gray-200 rounded-lg pl-6 pr-2 py-1 text-xs font-medium outline-none focus:border-black"
+                        />
+                    </div>
+                    <div className="flex-1 relative">
+                        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-gray-400 font-bold">Y</span>
+                        <input
+                            type="number"
+                            value={Math.round(visualData.imagePosition?.y || 0)}
+                            onChange={(e) => setVisualData(prev => ({
+                                ...prev,
+                                imagePosition: { ...prev.imagePosition, y: Number(e.target.value) }
+                            }))}
+                            className="w-full bg-white border border-gray-200 rounded-lg pl-6 pr-2 py-1 text-xs font-medium outline-none focus:border-black"
+                        />
+                    </div>
+                 </div>
+            </div>
+
+            {/* Кнопка сброса */}
+            <button 
+                onClick={() => setVisualData(prev => ({ ...prev, imageScale: 1, imagePosition: { x: 0, y: 0 } }))}
+                className="w-full text-xs text-gray-400 hover:text-black py-1 transition-colors underline decoration-dotted"
+            >
+                Reset Image
+            </button>
+        </div>
+    )}
             
             <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, 'backgroundImage')} />
         </div>
