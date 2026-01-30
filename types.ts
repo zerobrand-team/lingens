@@ -32,10 +32,8 @@ export interface VisualState {
   backgroundColor?: string | null;
   authorImage: string | null;
   logoImage: string | null; 
-  // Image Manipulation
   imageScale: number;
   imagePosition: { x: number; y: number };
-  // Text Manipulation
   headlineSettings: TypographySettings;
 }
 
