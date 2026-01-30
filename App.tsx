@@ -396,6 +396,7 @@ const App: React.FC = () => {
                                         Start with sample
                                       </span>
                                     </div>
+                                  </div>
                                 
                                 <div className="flex items-start justify-between w-full mt-4">
                                     <div className="flex-shrink-0 ">
@@ -432,6 +433,8 @@ const App: React.FC = () => {
                                         </div>
                                     </div> 
                                 </div>
+                            </div>
+                        )}
 
                                 {showHistory && (
                                     <div className="absolute inset-0 bg-white z-50 p-6 flex flex-col animate-in fade-in duration-200">
