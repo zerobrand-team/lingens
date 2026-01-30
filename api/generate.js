@@ -119,8 +119,8 @@ export default async function handler(request, response) {
         const isHeadline = field === 'headline';
         
         userPrompt = isHeadline 
-          ? `Generate a headline that feels like a 'Stop Sign'. Use a strong verb or a stark contrast. No generic business advice. Make it feel personal and immediate.
-             Style constraint: ${angle}. Max 7 words. 
+          ? `Generate a punchy, one-sentence "Stop Sign" headline. Use a strong verb or a stark contrast. No generic business advice. Write it as if it's a text message to a friend. Make it feel personal and immediate.
+             Style constraint: ${angle}. Max 7 words. NO colons (":") or dashes ("-").
              Context: ${rawInput}
              Return JSON: { "text": "..." }`
           : `Generate ONE new subheadline (max 10 words).
