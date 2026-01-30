@@ -292,7 +292,7 @@ return (
       <div className="absolute bottom-0 left-0 w-full h-[60%] z-0 pointer-events-none" 
            style={{ backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)' }} />
 
-      <div className="relative z-10 w-full flex flex-col pb-10 px-8 pointer-events-none items-center text-center">
+      <div className="relative z-10 w-full flex flex-col pb-5 px-8 pointer-events-none items-center text-center">
           <div className="pointer-events-auto w-full">
               {renderRichText(data.headline)}
           </div>
@@ -300,7 +300,7 @@ return (
          {/* Если есть логотип — рисуем линию и лого, если нет — пустота (текст прижмется ниже) */}
          {data.logoImage && (
             <>
-              <div className="w-full h-px bg-white/30 my-6"></div>
+              <div className="w-full h-px bg-white/30 my-3"></div>
               <div className="flex justify-center items-center h-8">
                   <img src={data.logoImage} className="h-6 w-auto object-contain" alt="logo"/>
               </div>
