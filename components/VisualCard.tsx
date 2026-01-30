@@ -114,7 +114,7 @@ const VisualCard = forwardRef<HTMLDivElement, VisualCardProps>(({
         {parts.map((part, index) => {
           if (index % 2 === 1) {
             return (
-                <span key={index} className="border-b-[0.1em] border-current box-decoration-clone pb-[0.1em]">
+                <span key={index} className="border-b-[0.1em] border-current box-decoration-clone pb-[0.02em]">
                     {part}
                 </span>
             );
