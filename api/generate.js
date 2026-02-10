@@ -31,12 +31,12 @@ const REGENERATE_ANGLES = [
 ];
 
 const VISUAL_ANGLES = [
-  "Action-First: Start with the core result or a decisive move. Use a strong verb.", 
-  "The Confession: Reveal a personal struggle, mistake, or 'behind-the-scenes' truth.", 
-  "The Cold Observer: Present the most impactful data point or fact as an objective reality.", 
-  "Contrarian Take: Lead with the part of the text that challenges common beliefs.", 
-  "The Mirror: Focus on the specific symptom of the problem the reader is facing.", 
-  "The Specific Gain: Lead with the exact number, time saved, or profit mentioned."
+  "Direct & Brutal: Start with a hard verb. No fluff. Just the raw outcome.", 
+  "The 'I' Statement: Start with 'I felt', 'I lost', or 'I realized'. Personal and vulnerable.", 
+  "The Question: Ask a provocative question that implies the result. Don't answer it yet.", 
+  "The Negative Hook: Say what you DIDN'T do or what went wrong first.", 
+  "The 'How': Start with 'How I...' or 'How to...'. Classic but specific.", 
+  "The One Word: Start with a single powerful word followed by a period/dash, then the context."
 ];
 
 export default async function handler(request, response) {
@@ -119,12 +119,13 @@ export default async function handler(request, response) {
         const isHeadline = field === 'headline';
         
         userPrompt = isHeadline 
-          ? `Analyze the Context and find the "Anchor Detail" (the strongest number, specific insight, or bold statement). Then, wrap it into a headline using the ${angle} style.
+          ? `Wrap it into a headline using the ${angle} style.
              PRIORITY RULES:
-             1. If there's a NUMBER or a SPECIFIC RESULT in the text, it MUST be the focus of the headline, regardless of the angle.
-             2. NO colons (":") or "Topic: Hook" structures.
-             3. Start directly with the hook. No "How to" or "Why you should".
-             4. Max 7 words.
+             1. Be punchy and conversational (no corporate jargon).
+             2. Max 8-9 words (keep it readable but not robotic).
+             3. If the context has a specific number ($ or %), try to include it naturally, BUT ONLY if it fits the Style.
+             4. DO NOT use colons (":") like "Growth: How I...".
+             5. MAKE IT SOUND DIFFERENT from a standard summary.
 
      Context: ${rawInput}
      Return JSON: { "text": "..." }`
@@ -149,7 +150,7 @@ export default async function handler(request, response) {
           { role: "system", content: SYSTEM_INSTRUCTION },
           { role: "user", content: userPrompt } 
         ],
-        temperature: 0.7
+        temperature: 0.9
       })
     });
 
