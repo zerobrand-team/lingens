@@ -1,5 +1,16 @@
 // api/generate.js
 
+// Самая дешёвая актуальная (GA, без даты отключения) Gemini на OpenRouter.
+// Старая google/gemini-2.0-flash-lite-001 удалена с OpenRouter — из-за неё генерация и сломалась.
+const DEFAULT_MODEL = "google/gemini-3.1-flash-lite";
+
+const OPENROUTER_ERROR_HINTS = {
+  401: "invalid OPENROUTER_API_KEY",
+  402: "no credits left on OpenRouter account",
+  404: "model not found — set OPENROUTER_MODEL to an existing model",
+  429: "rate limited, try again later"
+};
+
 // КОНСТАНТЫ И ИНСТРУКЦИИ ОСТАВЛЕНЫ БЕЗ ИЗМЕНЕНИЙ
 const SYSTEM_INSTRUCTION = `
 ### ROLE & OBJECTIVE
@@ -135,7 +146,9 @@ export default async function handler(request, response) {
              Return JSON: { "text": "..." }`;
     }
 
-    // 2. ИЗМЕНЕНИЕ: Запрос к OpenRouter через fetch (вместо Google SDK)
+    // 2. Запрос к OpenRouter через fetch (вместо Google SDK)
+    // Модель можно поменять без правки кода через переменную OPENROUTER_MODEL в Vercel
+    const model = process.env.OPENROUTER_MODEL || DEFAULT_MODEL;
     const openRouterResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -145,22 +158,28 @@ export default async function handler(request, response) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "google/gemini-2.0-flash-lite-001", 
+        model,
         messages: [
           { role: "system", content: SYSTEM_INSTRUCTION },
-          { role: "user", content: userPrompt } 
+          { role: "user", content: userPrompt }
         ],
-        temperature: 0.9
+        temperature: 0.9,
+        // Ответ всегда JSON — меньше поломок при парсинге
+        response_format: { type: "json_object" },
+        // Для переписывания текста глубокое "размышление" не нужно: быстрее и дешевле
+        reasoning: { effort: "low", exclude: true }
       })
     });
 
     if (!openRouterResponse.ok) {
         const errorData = await openRouterResponse.text();
-        throw new Error(`OpenRouter API Error: ${openRouterResponse.status} - ${errorData}`);
+        const hint = OPENROUTER_ERROR_HINTS[openRouterResponse.status] || "";
+        throw new Error(`OpenRouter API Error: ${openRouterResponse.status}${hint ? ` (${hint})` : ""} - ${errorData}`);
     }
 
     const data = await openRouterResponse.json();
-    const text = data.choices[0].message.content;
+    const text = data.choices?.[0]?.message?.content;
+    if (!text) throw new Error(`OpenRouter returned empty response: ${JSON.stringify(data.error || data)}`);
     
     // Очистка JSON (как у вас и было)
     const cleanJsonText = text.replace(/```json/g, '').replace(/```/g, '').trim();
