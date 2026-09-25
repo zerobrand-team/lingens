@@ -48,7 +48,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
       </header>
 
       {/* 2. MAIN CONTENT */}
-      <main className="flex-1 flex flex-col items-center text-center px-4 mt-12 md:mt-14 z-10 max-w-4xl mx-auto">
+      <main className="md:flex-1 flex flex-col items-center text-center px-4 mt-12 md:mt-14 z-10 max-w-4xl mx-auto">
         
         {/* Шаг 1: Заголовок */}
         <h1 className="animate-step delay-1 text-[36px] md:text-[70px] leading-[1] font-regular tracking-[-0.07em] text-black mb-10">
@@ -80,12 +80,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
         </div>
       </main>
 
-      {/* Шаг 3: Картинки */}
-      <div className="animate-step delay-3 w-full mt-auto flex justify-center px-4 z-10 pb-0 pt-12 md:pt-16">
-          <img 
-            src="/main-mob.png" 
-            alt="App Interface Mobile" 
-            className="block md:hidden w-full max-w-[500px] object-contain drop-shadow-2xl translate-y-1" 
+      {/* Шаг 3: Картинки (моб: сразу под кнопками с отступом 30px, десктоп: прижата к низу) */}
+      <div className="animate-step delay-3 w-full mt-[30px] md:mt-auto flex justify-center px-4 z-10 pb-10 md:pb-0 md:pt-16">
+          <img
+            src="/main-mob.png"
+            alt="App Interface Mobile"
+            className="block md:hidden w-full max-w-[500px] object-contain drop-shadow-2xl"
           />
           <img 
             src="/main-desk.png" 
